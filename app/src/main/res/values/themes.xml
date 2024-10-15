@@ -8,5 +8,7 @@
     </style>
     
     <style name="Theme.Wooperland_enserio" parent="android:Theme.Material.Light.NoActionBar" />
-    
+    <style name="Theme.Wooperland_enserio." parent="android:Theme.Material">
+        <item name="font">HappyMonkey</item>
+    </style>
 </resources>
