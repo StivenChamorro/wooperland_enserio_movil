@@ -53,19 +53,34 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+
+    implementation ("androidx.compose.material3:material3:1.1.0")
     //splash screen
     implementation("androidx.core:core-splashscreen:1.0.1")
+
+    //subir foto
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
+    //Navegacion
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
+    //Iconos extendidos
+    implementation("androidx.compose.material:material-icons-extended:1.5.0")
+    
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    debugImplementation("androidx.compose.ui:ui-tooling:1.6.8")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.6.8")
 }
