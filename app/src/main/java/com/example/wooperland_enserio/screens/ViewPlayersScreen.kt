@@ -3,8 +3,10 @@ package com.example.wooperland_enserio.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -15,16 +17,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.wooperland_enserio.R
 import com.example.wooperland_enserio.ui.theme.Wooperland_enserioTheme
-import okhttp3.internal.cookieToString
+
 
 @Composable
 fun ViewPlayerScreen() {
+    val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -34,7 +39,12 @@ fun ViewPlayerScreen() {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFFFFB74D)),
+                .background(
+                    color = Color(0xFFFFB74D),
+                    shape = RoundedCornerShape(bottomEnd = 25.dp, bottomStart = 25.dp)
+                )
+                .height(170.dp)
+                .align(Alignment.CenterHorizontally)
 
         ) {
             IconButton(
@@ -43,38 +53,56 @@ fun ViewPlayerScreen() {
             ) {
                 Icon(Icons.Default.ArrowBack, contentDescription = "Back")
             }
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.align(Alignment.Center)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.person),
-                    contentDescription = "Profile Picture",
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop
-                )
-                Text(
-                    text = "John Smith",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "johnsmith@example.com",
-                    fontSize = 14.sp,
-                    color = Color.DarkGray
-                )
+            Box(modifier = Modifier
+                .width(270.dp)
+                .align(Alignment.Center))
+            {
+                Column(modifier = Modifier.padding(10.dp)
+                    .align(Alignment.CenterStart)) {
+                    Image(
+                        painter = painterResource(id = R.drawable.person),
+                        contentDescription = "Profile Picture",
+                        modifier = Modifier
+                            .size(64.dp)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.align(Alignment.CenterEnd)
+                ) {
+                    Text(
+                        text = "John Smith",
+                        fontSize = 20.sp,
+                        fontFamily = FontFamily(Font(R.font.happy_monkey)),
+                        color = Color.Black
+                    )
+                    Text(
+                        text = "johnsmith@example.com",
+                        fontSize = 14.sp,
+                        fontFamily = FontFamily(Font(R.font.happy_monkey)),
+                        color = Color.Black
+                    )
+                }
+            }
                 Button(
                     onClick = { /* Handle profile view */ },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF4081)),
                     shape = RoundedCornerShape(20.dp),
-                    modifier = Modifier.padding(top = 8.dp)
+                    modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
+                        .height(35.dp)
+                        .align(Alignment.BottomCenter)
+
+
                 ) {
-                    Text("Ver perfil")
+                    Text(
+                        "Ver perfil",
+                        fontFamily = FontFamily(Font(R.font.happy_monkey)),
+                        color = Color.Black
+                    )
                 }
-            }
+
         }
 
         // Player Management Buttons
@@ -83,55 +111,79 @@ fun ViewPlayerScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
+                .height(35.dp)
         ) {
             Button(
                 onClick = { /* Handle add player */ },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF4081)),
-                shape = RoundedCornerShape(20.dp)
-            ) {
-                Text("Agregar Jugador")
+                shape = RoundedCornerShape(20.dp),
+
+                ) {
+                Text(
+                    "Agregar Jugador",
+                    fontFamily = FontFamily(Font(R.font.happy_monkey)),
+                    color = Color.Black
+                )
+
             }
             Button(
                 onClick = { /* Handle remove player */ },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF4081)),
                 shape = RoundedCornerShape(20.dp)
             ) {
-                Text("Eliminar Jugador")
+                Text(
+                    "Eliminar Jugador",
+                    fontFamily = FontFamily(Font(R.font.happy_monkey)),
+                    color = Color.Black
+                )
             }
         }
 
         // Player List
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .background(
-                    color = Color(0xFFDAA520),
-                    shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
-                )
-                .padding(16.dp)
-        ) {
-            repeat(6) {
-                PlayerCard()
-                Spacer(modifier = Modifier.height(8.dp))
+         Column(modifier = Modifier
+             .weight(1f)
+             .padding(15.dp)) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .verticalScroll(scrollState)
+                    .background(
+                        color = Color(0xFFFFB74D),
+                        shape = RoundedCornerShape(percent = 3)
+                    )
+                    .padding(16.dp)
+            ) {
+                repeat(6) {
+                    PlayerCard()
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
             }
-        }
-
-        // Logout Button
-        Button(
-            onClick = { /* Handle logout */ },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF4081)),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            shape = RoundedCornerShape(20.dp)
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.close),
-                contentDescription = "Logout",
-                modifier = Modifier.size(24.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text("Cerrar sesión")
+            Spacer(modifier = Modifier.height(15.dp))
+            // Logout Button
+            Button(
+                onClick = { /* Cerrar sesión */ },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(percent = 15))
+                    .background(Color(0xFFFFB74D)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFB74D)),
+                contentPadding = PaddingValues(16.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.close),
+                    contentDescription = "Perfil",
+                    modifier = Modifier
+                        .size(50.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    "Cerrar sesión",
+                    fontFamily = FontFamily(Font(R.font.happy_monkey)),
+                    fontSize = 12.sp,
+                    color = Color.Black,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
         }
     }
 }
@@ -161,16 +213,19 @@ fun PlayerCard() {
             )
             Spacer(modifier = Modifier.width(8.dp))
             Column {
+
                 Text(
                     text = "Nick",
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily(Font(R.font.happy_monkey)),
+                    color = Color.Black)
+
                 Text(
                     text = "Nicolas Smith Pines",
                     fontSize = 14.sp,
-                    color = Color(0xFFFF4081)
-                )
+                    fontFamily = FontFamily(Font(R.font.happy_monkey)),
+                    color = Color.Black)
             }
         }
     }
