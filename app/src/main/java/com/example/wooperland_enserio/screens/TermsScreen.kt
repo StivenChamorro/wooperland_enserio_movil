@@ -41,11 +41,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.wooperland_enserio.R
+import com.example.wooperland_enserio.navigation.NavScreen
 import com.example.wooperland_enserio.ui.theme.Wooperland_enserioTheme
 
 @Composable
-fun TermsScreen(){
+fun TermsScreen(navController: NavController){
     val gradient = Brush.verticalGradient(
         colors = listOf(
             Color(0xFFFFD166), // Amarillo claro
@@ -156,7 +159,7 @@ fun TermsScreen(){
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Button(
-                    onClick = { /* Acción para continuar */ },
+                    onClick = { navController.navigate(NavScreen.AddChildScreen.name) },
                     enabled = isChecked, // Habilita o deshabilita el botón según el checkbox
                     modifier = Modifier
                         .fillMaxWidth()
@@ -200,7 +203,7 @@ fun TermsScreenPreview(){
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            TermsScreen()
+            TermsScreen(rememberNavController())
         }
     }
 }

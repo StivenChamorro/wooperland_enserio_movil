@@ -64,6 +64,8 @@ dependencies {
     //Navegacion
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+
     //Iconos extendidos
     implementation("androidx.compose.material:material-icons-extended:1.5.0")
     

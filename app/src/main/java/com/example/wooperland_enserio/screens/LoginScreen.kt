@@ -42,13 +42,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.wooperland_enserio.R
+import androidx.navigation.compose.rememberNavController
+
+import com.example.wooperland_enserio.navigation.AppNavigation
+import com.example.wooperland_enserio.navigation.NavScreen
 import com.example.wooperland_enserio.ui.theme.Wooperland_enserioTheme
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen() {@OptIn(ExperimentalMaterial3Api::class)
+fun LoginScreen(navController: NavHostController) {@OptIn(ExperimentalMaterial3Api::class)
     val gradient = Brush.verticalGradient(
         colors = listOf(
             Color(0xFFFFD166), // Amarillo claro
@@ -148,7 +155,13 @@ fun LoginScreen() {@OptIn(ExperimentalMaterial3Api::class)
 
                     // Botón de Iniciar Sesión
                     Button(
-                        onClick = { /* Acción para iniciar sesión */ },
+                        onClick = {
+                            navController.navigate(NavScreen.HomeScreen.name){
+                                popUpTo(NavScreen.LoginScreen.name){
+                                    inclusive = true
+                                }
+                            }
+                        },
                         modifier = Modifier
                             .fillMaxWidth(.9f)
                             .height(48.dp)
@@ -219,7 +232,10 @@ fun LoginScreen() {@OptIn(ExperimentalMaterial3Api::class)
                             text = "Regístrate", fontFamily = FontFamily(Font(R.font.happy_monkey)),
                             color = Color(0xFFFFD166),
                             fontSize = 18.sp,
-                            modifier = Modifier.clickable { /* Acción para registrarse */ }
+                            modifier = Modifier.clickable {
+                                navController.navigate(NavScreen.RegisterScreen.name) {
+                                }
+                            }
                         )
                     }
                 }
@@ -248,11 +264,7 @@ fun LoginScreen() {@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreenPreview() {
     Wooperland_enserioTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            LoginScreen()
-        }
+        val navController = rememberNavController() // NavController para la preview
+        LoginScreen(navController = navController)
     }
 }

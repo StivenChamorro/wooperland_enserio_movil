@@ -26,10 +26,13 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.wooperland_enserio.navigation.NavScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddChild() {
+fun AddChildScreen(navController: NavController) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var name by remember { mutableStateOf("") }
     var lastname by remember { mutableStateOf("") }
@@ -230,7 +233,7 @@ fun AddChild() {
 
                     // Botón de continuar
                     Button(
-                        onClick = { /* Acción para continuar */ },
+                        onClick = { navController.navigate(NavScreen.HomeScreen.name) },
                         modifier = Modifier
                             .fillMaxWidth(.9f)
                             .height(56.dp)
@@ -257,7 +260,7 @@ fun AddChildPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            AddChild()
+            AddChildScreen(rememberNavController())
         }
     }
 }

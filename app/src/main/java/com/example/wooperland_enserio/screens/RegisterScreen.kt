@@ -46,7 +46,10 @@ import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.wooperland_enserio.R
+import com.example.wooperland_enserio.navigation.NavScreen
 import com.example.wooperland_enserio.ui.theme.Wooperland_enserioTheme
 import java.time.LocalDate
 import java.time.LocalDate.now
@@ -56,7 +59,7 @@ import java.time.format.DateTimeFormatter.ofPattern
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen() {
+fun RegisterScreen(navController: NavController) {
     val gradient = Brush.verticalGradient(
         colors = listOf(
             Color(0xFFFFD166), // Amarillo claro
@@ -258,7 +261,7 @@ fun RegisterScreen() {
 
                     // Botón de Registrarse
                     Button(
-                        onClick = { /* Acción para iniciar sesión */ },
+                        onClick = { navController.navigate(NavScreen.TermsScreen.name) },
                         modifier = Modifier
                             .fillMaxWidth(1f)
                             .height(50.dp)
@@ -287,7 +290,7 @@ fun RegisterScreen() {
                             text = "Inicia Sesión", fontFamily = FontFamily(Font(R.font.happy_monkey)),
                             color = Color(0xFFFFD166),
                             fontSize = 18.sp,
-                            modifier = Modifier.clickable { /* Acción para registrarse */ }
+                            modifier = Modifier.clickable { navController.navigate(NavScreen.LoginScreen.name) }
                         )
                     }
 
@@ -320,7 +323,7 @@ fun RegisterScreenPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            RegisterScreen()
+            RegisterScreen(rememberNavController())
         }
     }
 }
