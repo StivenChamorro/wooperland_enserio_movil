@@ -68,6 +68,11 @@ dependencies {
 
     //Iconos extendidos
     implementation("androidx.compose.material:material-icons-extended:1.5.0")
+
+    //Consumo API
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))

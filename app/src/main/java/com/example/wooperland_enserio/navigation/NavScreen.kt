@@ -6,6 +6,8 @@ enum class NavScreen {
     AvatarScreen,
     ShopScreen,
     AchievementScreen,
+    ChangePlayerPasswordScreen,
+    EdithFatherScreen,
     AddChildScreen,
     TermsScreen,
     LoginScreen,
