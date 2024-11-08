@@ -52,11 +52,18 @@ import com.example.wooperland_enserio.ui.theme.Wooperland_enserioTheme
 @SuppressLint("InvalidColorHexValue")
 @Composable
 fun HomeScreen() {
+
+    val gradient2 = Brush.verticalGradient(
+        colors = listOf(
+            Color(0xFFFFD166), // Amarillo claro
+            Color(0xFFEF476F)
+        )
+    )
+
     val gradient = Brush.verticalGradient(
         colors = listOf(
             Color(0xFFFFFFFF).copy(alpha = 0.5f), // Amarillo claro con opacidad del 80%
-            Color(0xFFB43654).copy(alpha = 0.5f)  // Rosa oscuro con opacidad del 60%
-
+            Color(0xFFB43654).copy(alpha = 0.5f), // Rosa oscuro con opacidad del 60%
         )
     )
 
@@ -71,51 +78,11 @@ fun HomeScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFFFFD166)),
+            .background(gradient2),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row (
-            modifier = Modifier
-                .background(color = Color(0xFFB43654))
-                .fillMaxWidth()
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically, // Alinea verticalmente
-            horizontalArrangement = Arrangement.SpaceBetween// Espacio entre los inputs
 
-        ){
-            Row (
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally)
-
-            ){
-                Image(
-                    painter = painterResource(id = R.drawable.logo),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier
-                        .size(40.dp, 40.dp)
-                )
-
-                Image(
-                    painter = painterResource(id = R.drawable.image4_4153158),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier
-                        .size(100.dp, 15.dp)
-                )
-            }
-
-
-            Image(
-                painter = painterResource(id = R.drawable.profile),
-                contentDescription = null,
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier
-                    .size(40.dp, 40.dp)
-                    .clip(CircleShape) // Hace la imagen circular
-            )
-        }
         Row(
             modifier = Modifier
                 .background(color = Color.White)
