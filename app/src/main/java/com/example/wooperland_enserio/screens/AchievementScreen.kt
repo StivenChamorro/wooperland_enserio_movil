@@ -13,11 +13,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.*
+
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Diamond
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -41,7 +44,7 @@ import com.example.wooperland_enserio.R
 
 @Composable
 fun AchievementsScreen() {
-    //var         iable para la fuente
+    //variable para la fuente
     val customFont2 = FontFamily(Font(R.font.happy_monkey))
 
     val scrollState = rememberScrollState()
@@ -124,18 +127,45 @@ Box(modifier = Modifier
                 }
 
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "💎 Diamantes del Jugador: 120/1200",
-                    fontFamily = customFont2,
-                    fontSize = 14.sp,
-                    color = Color.DarkGray
-                )
-                Text(
-                    text = "🏆 Logros Completados: 2/10",
-                    fontSize = 14.sp,
-                    fontFamily = customFont2,
-                    color = Color.DarkGray
-                )
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically, // Alinea verticalmente al centro
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.icondiamont),
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp)) // Espacio entre la imagen y el texto
+                    Text(
+                        text = "Diamantes del Jugador: 120/1200",
+                        fontFamily = customFont2,
+                        fontSize = 12.sp,
+                        color = Color.DarkGray
+                    )
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically, // Alinea verticalmente al centro
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.iconcup),
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp)) // Espacio entre la imagen y el texto
+                    Text(
+                        text = "Logros Completados: 2/10",
+                        fontSize = 12.sp,
+                        fontFamily = customFont2,
+                        color = Color.DarkGray
+                    )
+                }
+
             }
         }
 
@@ -152,15 +182,38 @@ Box(modifier = Modifier
             Achievement("Compañerismo", "Utiliza la ayuda de Wooper en un nivel", R.drawable.logrobloqueado, 20, false)
         )
 
-        achievements.forEach { achievement ->
-            AchievementItem(achievement)
+        val achievementpoints = listOf(
+            Image(R.drawable.icondiamont,"20"),
+            Image(R.drawable.icondiamont,"20"),
+            Image(R.drawable.icondiamont,"20"),
+            Image(R.drawable.icondiamont,"20")
+        )
+
+        achievements.forEachIndexed { index, achievement ->
+            val image = achievementpoints.getOrNull(index) ?: Image(R.drawable.icondiamont, "20")
+            AchievementItem(achievement = achievement, image = image)
             Spacer(modifier = Modifier.height(8.dp))
+
         }
     }
 }
 
+// Modelo de datos de logro
+data class Achievement(
+    val title: String,
+    val description: String,
+    val imageRes: Int,
+    val points: Int,
+    val isUnlocked: Boolean
+)
+
+data class Image(
+    val imagediamont: Int,
+    val quantity:String
+)
 @Composable
-fun AchievementItem(achievement: Achievement) {
+fun AchievementItem(achievement: Achievement, image:Image) {
+
     //variable para la fuente
     val customFont2 = FontFamily(Font(R.font.happy_monkey))
     Row(
@@ -194,23 +247,31 @@ fun AchievementItem(achievement: Achievement) {
                 text = achievement.description,
                 fontSize = 14.sp,
                 fontFamily = customFont2,
-                color = Color.Gray
+                color = colorResource(id = R.color.other_gray)
             )
+            Row(verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .align(Alignment.End)){
+            Image(
+                painter = painterResource(id = image.imagediamont),
+                contentDescription = "Icono de logro",
+                modifier = Modifier
+                    .size(18.dp)
+                    .clip(RoundedCornerShape(8.dp)),
+                contentScale = ContentScale.Crop
+            )
+                Text(
+                    text = image.quantity,
+                    fontSize = 14.sp,
+                    fontFamily = customFont2,
+                    color = colorResource(id = R.color.black)
+                )
+            }
+
         }
         Spacer(modifier = Modifier.weight(1f))
     }
 }
-
-// Modelo de datos de logro
-data class Achievement(
-    val title: String,
-    val description: String,
-    val imageRes: Int,
-    val points: Int,
-    val isUnlocked: Boolean
-)
-
-
 
 @Preview
 @Composable
