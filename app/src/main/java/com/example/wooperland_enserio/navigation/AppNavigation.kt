@@ -52,7 +52,7 @@ fun AppNavigation(
             ShopScreen()
         }
         composable(NavScreen.AchievementScreen.name) {
-            AchievementsScreen()
+            AchievementsScreen(navController)
         }
         composable(NavScreen.ChangePlayerPasswordScreen.name) {
             ChangePlayerPasswordScreen(navController)

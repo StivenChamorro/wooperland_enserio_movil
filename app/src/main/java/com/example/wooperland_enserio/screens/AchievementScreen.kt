@@ -11,9 +11,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.*
-
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -21,15 +21,26 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Diamond
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.outlined.Games
+import androidx.compose.material.icons.outlined.ManageAccounts
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -38,14 +49,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.style.TextAlign
+import androidx.navigation.NavHostController
 import com.example.wooperland_enserio.R
+import com.example.wooperland_enserio.navigation.NavScreen
+import com.example.wooperland_enserio.ui.theme.Rosa_wooper
+import androidx.navigation.compose.rememberNavController
+
 
 
 
 @Composable
-fun AchievementsScreen() {
+fun AchievementsScreen(navController: NavHostController) {
     //variable para la fuente
     val customFont2 = FontFamily(Font(R.font.happy_monkey))
+    var showMenu by remember { mutableStateOf(false) }
 
     val scrollState = rememberScrollState()
 
@@ -106,23 +123,91 @@ Box(modifier = Modifier
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(50.dp),
+                        .height(100.dp),
                     verticalAlignment = Alignment.CenterVertically // Alinea verticalmente al centro
                 ) {
                     Text(
                         text = "Matemáticas",
                         fontFamily = customFont2,
-                        fontSize = 22.sp,
+                        fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black,
                         modifier = Modifier.weight(1f) // Hace que el texto ocupe el espacio restante
                     )
 
-                    IconButton(onClick = { /* Acción de la flecha */ }) {
+                    IconButton(onClick = { showMenu = !showMenu }) {
                         Icon(
                             imageVector = Icons.Default.KeyboardArrowDown,
                             contentDescription = "Flecha abajo"
                         )
+                    }
+                    DropdownMenu(
+                        expanded = showMenu,
+                        onDismissRequest = { showMenu = false },
+                        modifier = Modifier
+                            .background(Color(0xFFFFD166))
+                            .border(2.dp, Color.Transparent, RoundedCornerShape(10.dp))
+                            .height(500.dp)
+                            .width(260.dp)
+                        )
+                    {
+                        Text(
+                            text = "Elige un tema",
+                            color = Color.Black,
+                            modifier = Modifier
+                                .padding(start = 10.dp),
+                            fontSize = 20.sp,
+                            fontFamily = FontFamily(
+                                Font(R.font.happy_monkey)
+                            )
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier
+                                        .border(2.dp, Color.Black)
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.imglogros),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(70.dp),
+                                    )
+                                    Text(
+                                        text = "MATEMATICAS",
+                                        color = Color.Black,
+                                        modifier = Modifier
+                                            .padding(start = 10.dp)
+                                            .align(alignment = Alignment.Top),
+                                        fontSize = 20.sp,
+                                        fontFamily = FontFamily(
+                                            Font(R.font.happy_monkey)
+                                        )
+                                    )
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(8.dp), // Opcional: para un poco de espacio alrededor
+                                        verticalAlignment = Alignment.CenterVertically // Alinea los elementos verticalmente al centro
+                                    ) {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.iconcup),
+                                            contentDescription = null,
+                                            modifier = Modifier.size(100.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(10.dp)) // Espacio entre la imagen y el texto
+                                        Text(
+                                            text = "20",
+                                            color = Color.Black,
+                                            fontSize = 100.sp,
+                                            fontFamily = FontFamily(Font(R.font.happy_monkey))
+                                        )
+                                    }
+                                }
+                            },
+                            onClick = { })
+
                     }
                 }
 
@@ -211,6 +296,7 @@ data class Image(
     val imagediamont: Int,
     val quantity:String
 )
+
 @Composable
 fun AchievementItem(achievement: Achievement, image:Image) {
 
@@ -276,8 +362,9 @@ fun AchievementItem(achievement: Achievement, image:Image) {
 @Preview
 @Composable
 fun AchievementcreenPreview(){
+    val navController = rememberNavController() // Simulación del NavController
     Wooperland_enserioTheme {
-        AchievementsScreen()
+        AchievementsScreen(navController = navController)
     }
 
 }
