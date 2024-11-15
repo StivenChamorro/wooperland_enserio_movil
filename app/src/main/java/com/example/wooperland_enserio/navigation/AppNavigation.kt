@@ -5,7 +5,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.wooperland_enserio.screens.AchievementScreen
+import com.example.wooperland_enserio.screens.AchievementsScreen
 import com.example.wooperland_enserio.screens.AddChildScreen
 import com.example.wooperland_enserio.screens.AvatarScreen
 import com.example.wooperland_enserio.screens.ChangePlayerPasswordScreen
@@ -52,7 +52,7 @@ fun AppNavigation(
             ShopScreen()
         }
         composable(NavScreen.AchievementScreen.name) {
-            AchievementScreen()
+            AchievementsScreen(navController)
         }
         composable(NavScreen.ChangePlayerPasswordScreen.name) {
             ChangePlayerPasswordScreen(navController)
