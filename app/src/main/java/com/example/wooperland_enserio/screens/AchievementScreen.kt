@@ -86,9 +86,6 @@ Box(modifier = Modifier
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            IconButton(onClick = { /*TODO*/ }, modifier = Modifier.align(Alignment.TopStart)) {
-            Icon( Icons.Default.ArrowBack, contentDescription = "Back") }
-
             Text(
                 text = "Logros",
                 fontSize = 28.sp,
