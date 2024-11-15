@@ -114,8 +114,7 @@ fun HeaderSection() {
                     },
                     active = active,
                     onActiveChange = { active = it},
-                    modifier = Modifier.wrapContentHeight()
-                        .height(50.dp),
+                    modifier = Modifier.wrapContentHeight(),
                     placeholder = {Text(text = "Example: Wooper Samurái",
                         color = Color.Gray,
                         fontFamily = FontFamily(Font(R.font.happy_monkey))
