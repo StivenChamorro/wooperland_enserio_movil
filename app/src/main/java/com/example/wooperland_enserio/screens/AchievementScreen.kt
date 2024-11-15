@@ -147,8 +147,8 @@ Box(modifier = Modifier
                         modifier = Modifier
                             .background(Color(0xFFFFD166))
                             .border(2.dp, Color.Transparent, RoundedCornerShape(10.dp))
-                            .height(500.dp)
-                            .width(260.dp)
+                            .height(130.dp)
+                            .width(280.dp)
                         )
                     {
                         Text(
@@ -164,15 +164,13 @@ Box(modifier = Modifier
                         DropdownMenuItem(
                             text = {
                                 Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier
-                                        .border(2.dp, Color.Black)
                                 ) {
                                     Image(
                                         painter = painterResource(id = R.drawable.imglogros),
                                         contentDescription = null,
                                         modifier = Modifier
-                                            .size(70.dp),
+                                            .size(70.dp)
+                                            .align(alignment = Alignment.Top)
                                     )
                                     Text(
                                         text = "MATEMATICAS",
@@ -187,20 +185,67 @@ Box(modifier = Modifier
                                     )
                                     Row(
                                         modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(8.dp), // Opcional: para un poco de espacio alrededor
-                                        verticalAlignment = Alignment.CenterVertically // Alinea los elementos verticalmente al centro
-                                    ) {
+                                            .height(30.dp)
+                                            .fillMaxHeight()
+                                            .align(Alignment.Bottom)
+                                    ){
                                         Image(
                                             painter = painterResource(id = R.drawable.iconcup),
                                             contentDescription = null,
-                                            modifier = Modifier.size(100.dp)
+                                            alignment = Alignment.CenterStart,
+                                            modifier = Modifier
+                                                .size(25.dp)
                                         )
-                                        Spacer(modifier = Modifier.width(10.dp)) // Espacio entre la imagen y el texto
                                         Text(
                                             text = "20",
                                             color = Color.Black,
-                                            fontSize = 100.sp,
+                                            fontSize = 13.sp,
+                                            fontFamily = FontFamily(Font(R.font.happy_monkey))
+                                        )
+                                    }
+                                }
+                            },
+                            onClick = { })
+
+                        DropdownMenuItem(
+                            text = {
+                                Row(
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.imglogros),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(70.dp)
+                                            .align(alignment = Alignment.Top)
+                                    )
+                                    Text(
+                                        text = "MATEMATICAS",
+                                        color = Color.Black,
+                                        modifier = Modifier
+                                            .padding(start = 10.dp)
+                                            .align(alignment = Alignment.Top),
+                                        fontSize = 20.sp,
+                                        fontFamily = FontFamily(
+                                            Font(R.font.happy_monkey)
+                                        )
+                                    )
+                                    Row(
+                                        modifier = Modifier
+                                            .height(30.dp)
+                                            .fillMaxHeight()
+                                            .align(Alignment.Bottom)
+                                    ){
+                                        Image(
+                                            painter = painterResource(id = R.drawable.iconcup),
+                                            contentDescription = null,
+                                            alignment = Alignment.CenterStart,
+                                            modifier = Modifier
+                                                .size(20.dp)
+                                        )
+                                        Text(
+                                            text = "20",
+                                            color = Color.Black,
+                                            fontSize = 13.sp,
                                             fontFamily = FontFamily(Font(R.font.happy_monkey))
                                         )
                                     }
