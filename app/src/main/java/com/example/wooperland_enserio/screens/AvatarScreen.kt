@@ -15,16 +15,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,7 +31,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -46,7 +39,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.rememberNavController
 import com.example.wooperland_enserio.R
 import com.example.wooperland_enserio.ui.theme.Wooperland_enserioTheme
 
@@ -56,7 +48,18 @@ fun AvatarScreen() {
     val customFont2 = FontFamily(Font(R.font.happy_monkey))
     var showMenu by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
+    val images = listOf(
+        R.drawable.avatar1,
+        R.drawable.avatar2,
+        R.drawable.deadpoolwooper,
+        R.drawable.avatar3,
+        R.drawable.avatar4,
+        R.drawable.avatar5,
+        R.drawable.avatar6,
+        R.drawable.avatar7
+    )
 
+    ImageGrid(images)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -92,12 +95,14 @@ fun AvatarScreen() {
                 textAlign = TextAlign.Center
             )
         }
-        Row(verticalAlignment = Alignment.CenterVertically,
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .padding(vertical = 16.dp)
                 .align(alignment = Alignment.CenterHorizontally)
-        ){
-            Image(painter = painterResource(id = R.drawable.deadpoolwooper),
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.deadpoolwooper),
                 contentDescription = "Imagen Principal",
                 modifier = Modifier
                     .size(100.dp)
@@ -105,10 +110,61 @@ fun AvatarScreen() {
             )
         }
     }
-    Spacer(modifier = Modifier.width(10.dp))
+    Spacer(modifier = Modifier.height(10.dp))
+
+    // Column para los botones
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+             .padding(top = 180.dp),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+
+    ) {
+        Box(
+            modifier = Modifier
+                .background(
+                    Color(0xFFA33B54),
+                    shape = RoundedCornerShape(55.dp)
+                )
+                .padding(16.dp)
+        ) {
+            Column {
+                for (i in images.indices step 3) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(30.dp),
+                        modifier = Modifier.padding(bottom = 70.dp),
+                        verticalAlignment = Alignment.Bottom,
+                    ) {
+                        for (j in 0..2) {
+                            if (i + j < images.size) {
+                                ImageItem(images[i + j])
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ImageGrid(images: List<Int>) {
 
 }
 
+@Composable
+fun ImageItem(imageRes: Int) {
+    Image(
+        painter = painterResource(id = imageRes),
+        contentDescription = null,
+        modifier = Modifier
+            .size(80.dp)
+            .clip(CircleShape),
+        contentScale = ContentScale.Crop
+    )
+}
 
 @Preview
 @Composable
