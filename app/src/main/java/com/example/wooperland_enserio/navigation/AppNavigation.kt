@@ -9,6 +9,7 @@ import com.example.wooperland_enserio.screens.AchievementScreen
 import com.example.wooperland_enserio.screens.AddChildScreen
 import com.example.wooperland_enserio.screens.AvatarScreen
 import com.example.wooperland_enserio.screens.ChangePlayerPasswordScreen
+import com.example.wooperland_enserio.screens.ChangePlayerScreen
 import com.example.wooperland_enserio.screens.EdithFatherScreen
 import com.example.wooperland_enserio.screens.HomeScreen
 import com.example.wooperland_enserio.screens.LoginScreen
@@ -59,6 +60,9 @@ fun AppNavigation(
         }
         composable(NavScreen.EdithFatherScreen.name) {
             EdithFatherScreen()
+        }
+        composable(NavScreen.ChangePlayerScreen.name) {
+           ChangePlayerScreen(navController)
         }
 
     }
