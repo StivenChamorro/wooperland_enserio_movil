@@ -86,22 +86,22 @@ fun ViewPlayerScreen() {
                     )
                 }
             }
-                Button(
-                    onClick = { /* Handle profile view */ },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF4081)),
-                    shape = RoundedCornerShape(20.dp),
-                    modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
-                        .height(35.dp)
-                        .align(Alignment.BottomCenter)
+            Button(
+                onClick = { /* Handle profile view */ },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF4081)),
+                shape = RoundedCornerShape(20.dp),
+                modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
+                    .height(35.dp)
+                    .align(Alignment.BottomCenter)
 
 
-                ) {
-                    Text(
-                        "Ver perfil",
-                        fontFamily = FontFamily(Font(R.font.happy_monkey)),
-                        color = Color.Black
-                    )
-                }
+            ) {
+                Text(
+                    "Ver perfil",
+                    fontFamily = FontFamily(Font(R.font.happy_monkey)),
+                    color = Color.Black
+                )
+            }
 
         }
 
@@ -140,9 +140,9 @@ fun ViewPlayerScreen() {
         }
 
         // Player List
-         Column(modifier = Modifier
-             .weight(1f)
-             .padding(15.dp)) {
+        Column(modifier = Modifier
+            .weight(1f)
+            .padding(15.dp)) {
             Column(
                 modifier = Modifier
                     .weight(1f)
