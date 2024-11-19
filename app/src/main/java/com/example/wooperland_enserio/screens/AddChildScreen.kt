@@ -1,11 +1,14 @@
 package com.example.wooperland_enserio.screens
 
+import android.content.res.Configuration
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -17,6 +20,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -58,35 +62,49 @@ fun AddChildScreen(navController: NavController) {
         imageUri = uri
     }
 
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.addchild),
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
         )
 
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
             Box(
                 modifier = Modifier
                     .background(gradient, shape = RoundedCornerShape(25.dp))
-                    .padding(16.dp, 50.dp)
+                    .padding(16.dp)
+                    .let {
+                        if (isLandscape) it.fillMaxHeight().width(screenWidth * 0.8f)
+                        else it.fillMaxWidth().height(screenHeight * 0.9f)
+                    }
             ) {
                 Column(
-                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         text = "Crea un nuevo perfil",
                         color = Color.White,
                         fontFamily = happyMonkeyFont,
-                        fontSize = 24.sp
+                        fontSize = 24.sp,
+                        modifier = Modifier.padding(top = 24.dp)
                     )
-
-                    Spacer(modifier = Modifier.height(50.dp))
 
                     Box(
                         modifier = Modifier
@@ -113,8 +131,6 @@ fun AddChildScreen(navController: NavController) {
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(50.dp))
-
                     OutlinedTextField(
                         value = name,
                         onValueChange = { name = it },
@@ -130,8 +146,6 @@ fun AddChildScreen(navController: NavController) {
                         ),
                         leadingIcon = { Icon(Icons.Default.Person, contentDescription = null, tint = Color.White) }
                     )
-
-                    Spacer(modifier = Modifier.height(16.dp))
 
                     OutlinedTextField(
                         value = lastname,
@@ -149,12 +163,10 @@ fun AddChildScreen(navController: NavController) {
                         leadingIcon = { Icon(Icons.Default.Person, contentDescription = null, tint = Color.White) }
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
-
                     OutlinedTextField(
                         value = birthDate,
                         onValueChange = { },
-                        label = { Text("Fecha de nacimiento", fontSize = 20.sp, color = Color.White, fontFamily = happyMonkeyFont) },
+                        label = { Text("Fecha de nacimiento", fontSize = 18.sp, color = Color.White, fontFamily = happyMonkeyFont) },
                         modifier = Modifier
                             .fillMaxWidth(0.9f)
                             .height(56.dp),
@@ -173,32 +185,6 @@ fun AddChildScreen(navController: NavController) {
                         }
                     )
 
-                    if (showDatePicker) {
-                        val datePickerState = rememberDatePickerState()
-                        DatePickerDialog(
-                            onDismissRequest = { showDatePicker = false },
-                            confirmButton = {
-                                TextButton(onClick = {
-                                    datePickerState.selectedDateMillis?.let {
-                                        birthDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(it))
-                                    }
-                                    showDatePicker = false
-                                }) {
-                                    Text("OK")
-                                }
-                            },
-                            dismissButton = {
-                                TextButton(onClick = { showDatePicker = false }) {
-                                    Text("Cancelar")
-                                }
-                            }
-                        ) {
-                            DatePicker(state = datePickerState)
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
                     OutlinedTextField(
                         value = relation,
                         onValueChange = { relation = it },
@@ -214,8 +200,6 @@ fun AddChildScreen(navController: NavController) {
                         ),
                         leadingIcon = { Icon(Icons.Default.Favorite, contentDescription = null, tint = Color.White) }
                     )
-
-                    Spacer(modifier = Modifier.height(16.dp))
 
                     OutlinedTextField(
                         value = gender,
@@ -233,8 +217,6 @@ fun AddChildScreen(navController: NavController) {
                         leadingIcon = { Icon(Icons.Default.Face, contentDescription = null, tint = Color.White) }
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
-
                     OutlinedTextField(
                         value = nickname,
                         onValueChange = { nickname = it },
@@ -251,8 +233,6 @@ fun AddChildScreen(navController: NavController) {
                         leadingIcon = { Icon(Icons.Default.Star, contentDescription = null, tint = Color.White) }
                     )
 
-                    Spacer(modifier = Modifier.height(60.dp))
-
                     Button(
                         onClick = { navController.navigate(NavScreen.HomeScreen.name) },
                         modifier = Modifier
@@ -265,8 +245,34 @@ fun AddChildScreen(navController: NavController) {
                     ) {
                         Text(text = "Continuar", fontFamily = happyMonkeyFont, fontSize = 30.sp)
                     }
+
+                    Spacer(modifier = Modifier.height(24.dp))
                 }
             }
+        }
+    }
+
+    if (showDatePicker) {
+        val datePickerState = rememberDatePickerState()
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    datePickerState.selectedDateMillis?.let {
+                        birthDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(it))
+                    }
+                    showDatePicker = false
+                }) {
+                    Text("OK")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text("Cancelar")
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
         }
     }
 }

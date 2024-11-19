@@ -132,7 +132,7 @@ fun TopAppBar(navController: NavHostController) {
                             )
                         }
                     },
-                    onClick = { navController.navigate("LoginScreen") })
+                    onClick = { navController.navigate(NavScreen.ChangePlayerScreen.name) })
 
                 DropdownMenuItem(
                     text = {

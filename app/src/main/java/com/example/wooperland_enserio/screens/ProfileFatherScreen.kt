@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.wooperland_enserio.R
+import com.example.wooperland_enserio.model.UserProfileResponse
 import com.example.wooperland_enserio.ui.theme.Amarillo
 import com.example.wooperland_enserio.ui.theme.Wooperland_enserioTheme
 
@@ -35,6 +36,7 @@ import com.example.wooperland_enserio.ui.theme.Wooperland_enserioTheme
 fun ProfileFatherScreen() {
     var isDarkMode by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
+
 
     Column(
         modifier = Modifier
@@ -156,7 +158,8 @@ fun ProfileFatherScreen() {
         )
 
         Button( onClick = {/*vista de jugadores*/},
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .clip(RoundedCornerShape(percent = 15))
                 .background(Color(0xFFFFB74D)),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFB74D))
@@ -230,7 +233,6 @@ fun ProfileFatherScreen() {
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
