@@ -152,13 +152,17 @@ fun AvatarScreen() {
             modifier = Modifier
                 .background(
                     Color(0xFFA33B54),
-                    shape = RoundedCornerShape(55.dp)
+                    shape = RoundedCornerShape(30.dp)
                 )
                 .padding(16.dp)
         ) {
             Column (
                 modifier = Modifier
-                    .verticalScroll(scrollState),
+                    .verticalScroll(scrollState)
+                    .background(
+                        color = Color.Transparent,
+                        shape = RoundedCornerShape(50.dp)
+                    )
             ){
                 for (i in images.indices step 3) {
                     Row(
