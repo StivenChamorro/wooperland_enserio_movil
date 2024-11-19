@@ -3,9 +3,11 @@ package com.example.wooperland_enserio.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -19,6 +21,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,6 +36,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -56,10 +62,28 @@ fun AvatarScreen() {
         R.drawable.avatar4,
         R.drawable.avatar5,
         R.drawable.avatar6,
-        R.drawable.avatar7
+        R.drawable.avatar7,
+        R.drawable.avatar1,
+        R.drawable.avatar2,
+        R.drawable.deadpoolwooper,
+        R.drawable.avatar3,
+        R.drawable.avatar4,
+        R.drawable.avatar5,
+        R.drawable.avatar6,
+        R.drawable.avatar7,
+        R.drawable.avatar1,
+        R.drawable.avatar2,
+        R.drawable.deadpoolwooper,
+        R.drawable.avatar3,
+        R.drawable.avatar4,
+        R.drawable.avatar5,
+        R.drawable.avatar6,
+        R.drawable.avatar7,
     )
 
-    ImageGrid(images)
+    // Variable de estado para la imagen seleccionada
+    var deadpoolwooper by remember { mutableStateOf(images[0]) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -71,7 +95,7 @@ fun AvatarScreen() {
                     )
                 )
             )
-            .padding(16.dp)
+            .padding(5.dp)
             .verticalScroll(scrollState)
     ) {
         Box(
@@ -101,25 +125,27 @@ fun AvatarScreen() {
                 .padding(vertical = 16.dp)
                 .align(alignment = Alignment.CenterHorizontally)
         ) {
+            // Esta imagen se reemplazará con la imagen que el usuario seleccione
             Image(
-                painter = painterResource(id = R.drawable.deadpoolwooper),
+                painter = painterResource(id = deadpoolwooper),
                 contentDescription = "Imagen Principal",
                 modifier = Modifier
                     .size(100.dp)
-                    .clip(RoundedCornerShape(8.dp)),
+                    .clip(RoundedCornerShape(9.dp)),
             )
         }
     }
     Spacer(modifier = Modifier.height(10.dp))
 
-    // Column para los botones
+    // Contenedor para los avatares
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
-             .padding(top = 180.dp),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
+            .padding(20.dp)
+            .height(600.dp)
+            .padding(top = 170.dp),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
         Box(
@@ -130,41 +156,102 @@ fun AvatarScreen() {
                 )
                 .padding(16.dp)
         ) {
-            Column {
+            Column (
+                modifier = Modifier
+                    .verticalScroll(scrollState),
+            ){
                 for (i in images.indices step 3) {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(30.dp),
-                        modifier = Modifier.padding(bottom = 70.dp),
+                        modifier = Modifier
+                            .padding(bottom = 50.dp),
                         verticalAlignment = Alignment.Bottom,
                     ) {
                         for (j in 0..2) {
                             if (i + j < images.size) {
-                                ImageItem(images[i + j])
+                                ImageItem(
+                                    imageRes = images[i + j],
+                                    onClick = {
+                                        deadpoolwooper = images[i + j] // Cambia la imagen principal
+                                    }
+                                )
                             }
                         }
                     }
+
                 }
+            }
+        }
+    }
+
+    // botones de aceptar y cancelar
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp)
+            .padding(top = 600.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Button(
+            onClick = { },
+            colors = ButtonDefaults.buttonColors( Color.Transparent)
+        ) {
+            Box(
+                modifier = Modifier
+                    .background(
+                        color = colorResource(id = R.color.other_rose),
+                        shape = RoundedCornerShape(40.dp)
+                    )
+                    .width(130.dp)
+                    .height(40.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    "Aceptar",
+                    fontFamily = customFont2,
+                    color = Color.White
+                )
+            }
+        }
+
+        Button(
+            onClick = { },
+            colors = ButtonDefaults.buttonColors( Color.Transparent)
+        ) {
+            Box(
+                modifier = Modifier
+                    .background(
+                        color = colorResource(id = R.color.other_rose),
+                        shape = RoundedCornerShape(40.dp)
+                    )
+                    .width(130.dp)
+                    .height(40.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    "Cancelar",
+                    fontFamily = customFont2,
+                    color = Color.White
+                )
             }
         }
     }
 }
 
 @Composable
-fun ImageGrid(images: List<Int>) {
-
-}
-
-@Composable
-fun ImageItem(imageRes: Int) {
+fun ImageItem(imageRes: Int, onClick: () -> Unit) {
     Image(
         painter = painterResource(id = imageRes),
         contentDescription = null,
         modifier = Modifier
             .size(80.dp)
-            .clip(CircleShape),
+            .clip(CircleShape)
+            .clickable(onClick = onClick),
         contentScale = ContentScale.Crop
     )
 }
+
 
 @Preview
 @Composable
