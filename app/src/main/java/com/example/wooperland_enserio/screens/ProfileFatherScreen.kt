@@ -27,13 +27,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.wooperland_enserio.R
 import com.example.wooperland_enserio.model.UserProfileResponse
+import com.example.wooperland_enserio.navigation.NavScreen
 import com.example.wooperland_enserio.ui.theme.Amarillo
 import com.example.wooperland_enserio.ui.theme.Wooperland_enserioTheme
 
 @Composable
-fun ProfileFatherScreen() {
+fun ProfileFatherScreen(navController: NavController) {
     var isDarkMode by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
 
@@ -52,7 +55,7 @@ fun ProfileFatherScreen() {
             verticalAlignment = Alignment.CenterVertically
 
         ) {
-            IconButton(onClick = { /* Navegación hacia atrás */ }) {
+            IconButton(onClick = { navController.navigate(NavScreen.HomeScreen.name) }) {
                 Icon(Icons.Default.ArrowBack, contentDescription = "Regresar")
 
             }
@@ -101,7 +104,9 @@ fun ProfileFatherScreen() {
             )
 
             Button(
-                onClick = { /* Ver perfil */ },
+                onClick = {
+                        navController.navigate(NavScreen.EdithFatherScreen.name)
+                },
                 modifier = Modifier
                     .padding(top = 8.dp)
                     .clip(RoundedCornerShape(percent = 30))
@@ -157,7 +162,7 @@ fun ProfileFatherScreen() {
             modifier = Modifier.padding(vertical = 8.dp)
         )
 
-        Button( onClick = {/*vista de jugadores*/},
+        Button( onClick = {navController.navigate(NavScreen.ViewPlayersScreen.name)},
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(percent = 15))
@@ -203,7 +208,7 @@ fun ProfileFatherScreen() {
         Spacer(modifier = Modifier.weight(1f))
         // Botón Cerrar sesión
         Button(
-            onClick = { /* Cerrar sesión */ },
+            onClick = {  navController.navigate(NavScreen.LoginScreen.name) },
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(percent = 15))
@@ -242,7 +247,8 @@ fun ProfileFatherScreenPreview(){
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            ProfileFatherScreen()
+            val navController = rememberNavController() // NavController para la preview
+            ProfileFatherScreen(navController = navController)
         }
     }
 }

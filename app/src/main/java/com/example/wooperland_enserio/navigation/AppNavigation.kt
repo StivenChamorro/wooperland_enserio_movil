@@ -15,10 +15,12 @@ import com.example.wooperland_enserio.screens.ChangePlayerScreen
 import com.example.wooperland_enserio.screens.EdithFatherScreen
 import com.example.wooperland_enserio.screens.HomeScreen
 import com.example.wooperland_enserio.screens.LoginScreen
+import com.example.wooperland_enserio.screens.ProfileFatherScreen
 import com.example.wooperland_enserio.screens.ProfileScreen
 import com.example.wooperland_enserio.screens.RegisterScreen
 import com.example.wooperland_enserio.screens.ShopScreen
 import com.example.wooperland_enserio.screens.TermsScreen
+import com.example.wooperland_enserio.screens.ViewPlayerScreen
 
 @Composable
 fun AppNavigation(
@@ -61,10 +63,16 @@ fun AppNavigation(
             ChangePlayerPasswordScreen(navController)
         }
         composable(NavScreen.EdithFatherScreen.name) {
-            EdithFatherScreen()
+            EdithFatherScreen(navController)
+        }
+        composable(NavScreen.ProfileFatherScreen.name) {
+            ProfileFatherScreen(navController)
         }
         composable(NavScreen.ChangePlayerScreen.name) {
            ChangePlayerScreen(navController)
+        }
+        composable(NavScreen.ViewPlayersScreen.name) {
+            ViewPlayerScreen(navController)
         }
 
     }

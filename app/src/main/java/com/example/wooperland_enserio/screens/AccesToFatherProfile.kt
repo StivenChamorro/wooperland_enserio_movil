@@ -140,7 +140,7 @@ fun ChangePlayerPasswordScreen(navController: NavController) {
         Button(
             onClick = {
                 if (pin.all { it.isNotEmpty() }) {
-                    navController.navigate(NavScreen.EdithFatherScreen.name)
+                    navController.navigate(NavScreen.ProfileFatherScreen.name)
                 }
             },
             modifier = Modifier

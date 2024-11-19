@@ -72,6 +72,7 @@ fun HomeScreen() {
                 .height(screenHeight * 0.15f)
                 .background(Color.White)
         ) {
+            
             Image(
                 painter = painterResource(id = R.drawable.welcome),
                 contentDescription = null,

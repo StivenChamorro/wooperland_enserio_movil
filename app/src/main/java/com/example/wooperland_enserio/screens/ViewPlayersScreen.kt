@@ -23,12 +23,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.wooperland_enserio.R
+import com.example.wooperland_enserio.navigation.NavScreen
 import com.example.wooperland_enserio.ui.theme.Wooperland_enserioTheme
 
 
 @Composable
-fun ViewPlayerScreen() {
+fun ViewPlayerScreen(navController: NavController) {
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
@@ -48,7 +51,7 @@ fun ViewPlayerScreen() {
 
         ) {
             IconButton(
-                onClick = { /* Handle back navigation */ },
+                onClick = { navController.navigate(NavScreen.ProfileFatherScreen.name) },
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 Icon(Icons.Default.ArrowBack, contentDescription = "Back")
@@ -239,7 +242,8 @@ fun ViewPlayerPreview(){
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background,
         ) {
-            ViewPlayerScreen()
+            val navController = rememberNavController()
+            ViewPlayerScreen(navController = navController)
         }
     }
 }

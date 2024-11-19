@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.wooperland_enserio.R
+import com.example.wooperland_enserio.navigation.NavScreen
 import com.example.wooperland_enserio.ui.theme.Wooperland_enserioTheme
 
 // Primero necesitas añadir la fuente Happy Monkey en tu proyecto
@@ -40,7 +41,7 @@ val HappyMonkeyFont = FontFamily(
 )
 
 @Composable
-fun EdithFatherScreen() {
+fun EdithFatherScreen(navController: NavController) {
     val scrollState = rememberScrollState()
     var nombres by remember { mutableStateOf("John Andrés") }
     var apellidos by remember { mutableStateOf("Smith Pines") }
@@ -63,7 +64,7 @@ fun EdithFatherScreen() {
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { /* Navegación hacia atrás */ }) {
+            IconButton(onClick = { navController.navigate(NavScreen.ProfileFatherScreen.name) }) {
                 Icon(Icons.Default.ArrowBack, contentDescription = "Regresar")
             }
             Text(
@@ -305,7 +306,8 @@ fun EdithFatherScreenPreview(){
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background,
         ) {
-            EdithFatherScreen()
+            val navController = rememberNavController()
+            EdithFatherScreen(navController = navController)
         }
     }
 }
