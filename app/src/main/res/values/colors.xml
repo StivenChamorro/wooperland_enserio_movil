@@ -9,4 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="sunglow">#FFD166</color>
     <color name="rosa_wooper">#B43654</color>
+    <color name="degradado_wooper">#F78D6B</color>
+    <color name="other_gray">#585858</color>
+    <color name="other_rose">#EF476F</color>
 </resources>
