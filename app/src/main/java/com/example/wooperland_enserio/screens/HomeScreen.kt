@@ -29,13 +29,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 
 import com.example.wooperland_enserio.R
+import com.example.wooperland_enserio.navigation.NavScreen
 import com.example.wooperland_enserio.ui.theme.Wooperland_enserioTheme
 
 @SuppressLint("InvalidColorHexValue")
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp
@@ -213,6 +217,7 @@ fun HomeScreen() {
             ) {
                 items(3) {
                     SubjectCard(
+                        navController,
                         modifier = Modifier
                             .width(screenWidth * 0.8f)
                             .height(screenHeight * 0.2f)
@@ -224,11 +229,13 @@ fun HomeScreen() {
 }
 
 @Composable
-fun SubjectCard(modifier: Modifier = Modifier) {
+fun SubjectCard(
+    navController: NavController,
+    modifier: Modifier = Modifier) {
     val customFont2 = FontFamily(Font(R.font.happy_monkey))
 
     Card(
-        onClick = { /*TODO*/ },
+        onClick = {navController.navigate(NavScreen.LevelPreviewScreen.name)},
         modifier = modifier,
         shape = RoundedCornerShape(16.dp)
     ) {
@@ -282,6 +289,7 @@ fun SubjectCard(modifier: Modifier = Modifier) {
 @Composable
 fun HomeScreenPreview() {
     Wooperland_enserioTheme {
-        HomeScreen()
+        val navController = rememberNavController()
+        HomeScreen(navController = navController)
     }
 }
