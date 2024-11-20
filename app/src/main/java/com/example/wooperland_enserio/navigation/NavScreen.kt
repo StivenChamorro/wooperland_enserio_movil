@@ -13,4 +13,5 @@ enum class NavScreen {
     LoginScreen,
     RegisterScreen,
     ChangePlayerScreen,
+    LevelPreviewScreen
 }

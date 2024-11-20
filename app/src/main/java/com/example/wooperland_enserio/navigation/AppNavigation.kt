@@ -14,6 +14,7 @@ import com.example.wooperland_enserio.screens.ChangePlayerPasswordScreen
 import com.example.wooperland_enserio.screens.ChangePlayerScreen
 import com.example.wooperland_enserio.screens.EdithFatherScreen
 import com.example.wooperland_enserio.screens.HomeScreen
+import com.example.wooperland_enserio.screens.LevelPreviewScreen
 import com.example.wooperland_enserio.screens.LoginScreen
 import com.example.wooperland_enserio.screens.ProfileScreen
 import com.example.wooperland_enserio.screens.RegisterScreen
@@ -42,7 +43,7 @@ fun AppNavigation(
 
         //rutas de navegacion principales
         composable(NavScreen.HomeScreen.name) {
-            HomeScreen()
+            HomeScreen(navController)
         }
         composable(NavScreen.ProfileScreen.name) {
             ProfileScreen()
@@ -64,6 +65,9 @@ fun AppNavigation(
         }
         composable(NavScreen.ChangePlayerScreen.name) {
            ChangePlayerScreen(navController)
+        }
+        composable(NavScreen.LevelPreviewScreen.name) {
+            LevelPreviewScreen(navController)
         }
 
     }
