@@ -15,6 +15,7 @@ import com.example.wooperland_enserio.screens.ChangePlayerScreen
 import com.example.wooperland_enserio.screens.EdithFatherScreen
 import com.example.wooperland_enserio.screens.HomeScreen
 import com.example.wooperland_enserio.screens.LevelPreviewScreen
+import com.example.wooperland_enserio.screens.LevelScreen
 import com.example.wooperland_enserio.screens.LoginScreen
 import com.example.wooperland_enserio.screens.ProfileScreen
 import com.example.wooperland_enserio.screens.RegisterScreen
@@ -69,6 +70,9 @@ fun AppNavigation(
         }
         composable(NavScreen.LevelPreviewScreen.name) {
             LevelPreviewScreen(navController)
+        }
+        composable(NavScreen.LevelScreen.name) {
+            LevelScreen(onNavigateBack = { navController.popBackStack() }, navController = navController)
         }
 
     }
