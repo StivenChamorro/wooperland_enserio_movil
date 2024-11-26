@@ -38,10 +38,10 @@ sealed class Items_bottom_nav (
         NavScreen.ShopScreen.name
     )
 
-    object Item_bottom_nav5: Items_bottom_nav(
-        Icons.Outlined.TaskAlt,
-        "Logros",
-        NavScreen.AchievementScreen.name
-    )
+//    object Item_bottom_nav5: Items_bottom_nav(
+//        Icons.Outlined.TaskAlt,
+//        "Logros",
+//        NavScreen.AchievementScreen.name
+//    )
 
 }

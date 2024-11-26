@@ -28,7 +28,7 @@ fun NavegacionInferior(navController: NavHostController) {
         Item_bottom_nav2,
         Item_bottom_nav3,
         Item_bottom_nav4,
-        Item_bottom_nav5
+        //Item_bottom_nav5
     )
 
     BottomAppBar(

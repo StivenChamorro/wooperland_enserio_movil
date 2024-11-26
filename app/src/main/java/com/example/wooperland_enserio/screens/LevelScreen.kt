@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.speech.tts.TextToSpeech
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -118,9 +119,11 @@ fun LevelScreen(
             Image(painter = painterResource(
                 id = R.drawable.axolotl), contentDescription =null,
                 modifier = Modifier
-                    .size(200.dp)
+                    .size(300.dp)
                     .align(Alignment.CenterHorizontally)
             )
+
+            Spacer(modifier = Modifier.height(50.dp))
 
 
 //            // Answer Options
@@ -152,17 +155,17 @@ fun LevelScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    com.example.matematicas.screens.AnswerButton(
+                    com.example.wooperland_enserio.screens.AnswerButton(
                         text = "5",
                         label = "A",
-                        color = Color(0xFFFF69B4),
+                        color = Color(0xFFB43654),
                         modifier = Modifier.weight(1f),
                         onClick = {}
                     )
-                    com.example.matematicas.screens.AnswerButton(
+                    com.example.wooperland_enserio.screens.AnswerButton(
                         text = "4",
                         label = "B",
-                        color = Color(0xFF4169E1),
+                        color = Color(0xFF1B6286),
                         modifier = Modifier.weight(1f),
                         onClick = {}
                     )
@@ -171,17 +174,17 @@ fun LevelScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    com.example.matematicas.screens.AnswerButton(
+                    com.example.wooperland_enserio.screens.AnswerButton(
                         text = "1",
                         label = "C",
-                        color = Color(0xFF90EE90),
+                        color = Color(0xFF92D3CF),
                         modifier = Modifier.weight(1f),
                         onClick = {}
                     )
-                    com.example.matematicas.screens.AnswerButton(
+                    com.example.wooperland_enserio.screens.AnswerButton(
                         text = "Ninguna de las anteriores",
                         label = "D",
-                        color = Color(0xFFFF8C00),
+                        color = Color(0xFFE76B1F),
                         modifier = Modifier.weight(1f),
                         onClick = {}
                     )
@@ -240,7 +243,7 @@ fun LevelScreen(
         Dialog(onDismissRequest = { showPauseDialog = false }) {
             Surface(
                 shape = RoundedCornerShape(16.dp),
-                color = Color.White
+                color = Color(0xFFB43654)
             ) {
                 Column(
                     modifier = Modifier.padding(24.dp),
@@ -248,24 +251,38 @@ fun LevelScreen(
                 ) {
                     Text(
                         text = "Juego Pausado",
-                        fontFamily = pixelFont,
+                        fontFamily = happyFont,
+                        color = Color.White,
                         fontSize = 20.sp
                     )
                     Spacer(modifier = Modifier.height(16.dp))
-                    Button(onClick = {
-                        isTimerRunning = true
-                        showPauseDialog = false
-                    }) {
+                    Button(
+                        onClick = {
+                            isTimerRunning = true
+                            showPauseDialog = false
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent, // Fondo transparente
+                            contentColor = Color.White // Color del texto
+                        )
+                    ) {
                         Text("Continuar", fontFamily = happyFont)
                     }
                     Spacer(modifier = Modifier.height(8.dp))
-                    Button(onClick = onNavigateBack) {
+                    Button(
+                        onClick = onNavigateBack,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent, // Fondo transparente
+                            contentColor = Color.White // Color del texto
+                        )
+                    ) {
                         Text("Salir", fontFamily = happyFont)
                     }
                 }
             }
         }
     }
+
 
     // Help Dialog
     if (showHelpDialog) {
@@ -313,7 +330,8 @@ fun AnswerButton(
                 elevation = 4.dp,
                 shape = RoundedCornerShape(16.dp)
             )
-            .height(80.dp)
+            .height(60.dp)
+            .border(1.dp, Color.Black, RoundedCornerShape(16.dp)) // Borde negro a todo el botón
             .clickable(onClick = onClick)
     ) {
         Row(
@@ -334,7 +352,7 @@ fun AnswerButton(
                     text = label,
                     color = Color.White,
                     fontSize = 24.sp,
-                    fontFamily = FontFamily(Font(R.font.press_start_2p))
+                    fontFamily = happyMonkeyFont
                 )
             }
 
@@ -343,7 +361,7 @@ fun AnswerButton(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
-                        color = Color.White,
+                        color = Color(0xFFFFEFCB),
                         shape = RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp)
                     ),
                 contentAlignment = Alignment.Center
@@ -351,7 +369,7 @@ fun AnswerButton(
                 Text(
                     text = text,
                     fontSize = 20.sp,
-                    fontFamily = FontFamily(Font(R.font.press_start_2p)),
+                    fontFamily = happyMonkeyFont,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(8.dp)
                 )
@@ -359,3 +377,4 @@ fun AnswerButton(
         }
     }
 }
+
