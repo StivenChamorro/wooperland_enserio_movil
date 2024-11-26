@@ -74,6 +74,11 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation ("androidx.compose.ui:ui-tooling:1.x.x")
+
+    //implementacion de token
+    implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3")
+    implementation ("com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2")
+
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -82,6 +87,8 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.datastore.core.android)
+    implementation(libs.androidx.datastore.preferences.core.jvm)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
