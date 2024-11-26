@@ -31,7 +31,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.wooperland_enserio.R
 import com.example.wooperland_enserio.navigation.NavScreen
@@ -39,7 +38,9 @@ import com.example.wooperland_enserio.ui.theme.Wooperland_enserioTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(
+    onclickLogin: (email: String, password: String) -> Unit,
+) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
@@ -143,11 +144,12 @@ fun LoginScreen(navController: NavHostController) {
 
                         Button(
                             onClick = {
-                                navController.navigate(NavScreen.HomeScreen.name) {
-                                    popUpTo(NavScreen.LoginScreen.name) {
-                                        inclusive = true
-                                    }
-                                }
+                                onclickLogin(email, password)
+//                                navController.navigate(NavScreen.HomeScreen.name) {
+//                                    popUpTo(NavScreen.LoginScreen.name) {
+//                                        inclusive = true
+//                                    }
+//                                }
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -161,15 +163,6 @@ fun LoginScreen(navController: NavHostController) {
                                 fontSize = (screenWidth.value * 0.05f).sp
                             )
                         }
-
-                        Text(
-                            text = "Olvidaste tu contraseña?",
-                            fontFamily = happyMonkeyFont,
-                            color = Color.White,
-                            fontSize = (screenWidth.value * 0.04f).sp,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.clickable { /* Acción de recuperación */ }
-                        )
 
                         Spacer(modifier = Modifier.height(16.dp))
 
@@ -190,7 +183,7 @@ fun LoginScreen(navController: NavHostController) {
                                 color = Color(0xFFFFD166),
                                 fontSize = (screenWidth.value * 0.04f).sp,
                                 modifier = Modifier.clickable {
-                                    navController.navigate(NavScreen.RegisterScreen.name)
+//                                    navController.navigate(NavScreen.RegisterScreen.name)
                                 }
                             )
                         }
@@ -209,11 +202,11 @@ fun LoginScreen(navController: NavHostController) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview() {
-    Wooperland_enserioTheme {
-        val navController = rememberNavController() // NavController para la preview
-        LoginScreen(navController = navController)
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun LoginScreenPreview() {
+//    Wooperland_enserioTheme {
+//        val navController = rememberNavController() // NavController para la preview
+//        LoginScreen()
+//    }
+//}

@@ -15,6 +15,7 @@ import com.example.wooperland_enserio.components.NavegacionInferior
 import com.example.wooperland_enserio.components.TopAppBar
 import com.example.wooperland_enserio.navigation.AppNavigation
 import com.example.wooperland_enserio.navigation.NavScreen
+import com.example.wooperland_enserio.viewmodel.LoginViewModel
 
 
 @Composable
@@ -27,7 +28,6 @@ fun MainScreen() {
         NavScreen.ProfileScreen.name,
         NavScreen.ShopScreen.name,
         NavScreen.AvatarScreen.name,
-        NavScreen.AchievementScreen.name
     )
 
     Scaffold(
@@ -57,7 +57,10 @@ fun MainScreen() {
                 .padding(padding)
                 .fillMaxSize()
         ) {
-            AppNavigation(navController = navController)
+            AppNavigation(
+                navController = navController,
+                viewModel = LoginViewModel()
+            )
         }
     }
 }
