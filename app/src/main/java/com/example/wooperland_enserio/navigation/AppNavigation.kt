@@ -22,10 +22,12 @@ import com.example.wooperland_enserio.screens.RegisterScreen
 import com.example.wooperland_enserio.screens.ShopScreen
 import com.example.wooperland_enserio.screens.TermsScreen
 import com.example.wooperland_enserio.viewmodel.LoginViewModel
+import com.example.wooperland_enserio.viewmodel.RegisterViewModel
 
 @Composable
 fun AppNavigation(
     viewModel: LoginViewModel,
+    viewModel2: RegisterViewModel,
     navController: NavHostController
 ) {
     NavHost(
@@ -45,16 +47,38 @@ fun AppNavigation(
             } else {
                 LoginScreen(
                     onclickLogin = viewModel::login,
+                    navController = navController
                 )
             }
         }
 
+        composable(route = NavigationItem.Register.route) {
+            if (viewModel2.isSuccessRegister.value) {
+                LaunchedEffect(key1 = Unit) {
+                    navController.navigate("${NavigationItem.AddChild.route}/${viewModel2.token.value}") {
+                        popUpTo(route = NavigationItem.Register.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+            } else {
+                RegisterScreen(
+                    onClickRegister = { name, lastName, birthDate, email, username, password, confirmPassword, token ->
+                        viewModel2.register(name, lastName, birthDate, email, username, password, confirmPassword, token)
+                    },
+                    navController = navController
+                )
+            }
+        }
+
+
+
 //        composable(NavigationItem.Login.route) {
 //            LoginScreen(navController)
 //        }
-        composable(NavigationItem.Register.route) {
-            RegisterScreen(navController)
-        }
+//        composable(NavigationItem.Register.route) {
+//            RegisterScreen(navController)
+//        }
         composable(NavigationItem.Terms.route) {
             TermsScreen(navController)
         }

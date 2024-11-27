@@ -16,6 +16,7 @@ import com.example.wooperland_enserio.components.TopAppBar
 import com.example.wooperland_enserio.navigation.AppNavigation
 import com.example.wooperland_enserio.navigation.NavScreen
 import com.example.wooperland_enserio.viewmodel.LoginViewModel
+import com.example.wooperland_enserio.viewmodel.RegisterViewModel
 
 
 @Composable
@@ -59,7 +60,8 @@ fun MainScreen() {
         ) {
             AppNavigation(
                 navController = navController,
-                viewModel = LoginViewModel()
+                viewModel = LoginViewModel(),
+                viewModel2 = RegisterViewModel()
             )
         }
     }
