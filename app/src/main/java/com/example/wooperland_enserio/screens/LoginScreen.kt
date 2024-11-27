@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.wooperland_enserio.R
 import com.example.wooperland_enserio.navigation.NavScreen
@@ -39,6 +40,7 @@ import com.example.wooperland_enserio.ui.theme.Wooperland_enserioTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
+    navController: NavController,
     onclickLogin: (email: String, password: String) -> Unit,
 ) {
     val configuration = LocalConfiguration.current
@@ -183,7 +185,7 @@ fun LoginScreen(
                                 color = Color(0xFFFFD166),
                                 fontSize = (screenWidth.value * 0.04f).sp,
                                 modifier = Modifier.clickable {
-//                                    navController.navigate(NavScreen.RegisterScreen.name)
+                                   navController.navigate(NavScreen.RegisterScreen.name)
                                 }
                             )
                         }

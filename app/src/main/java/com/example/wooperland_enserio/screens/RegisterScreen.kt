@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
+import androidx.compose.material3.ExposedDropdownMenuDefaults.outlinedTextFieldColors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,7 +45,10 @@ import java.util.*
 @RequiresApi(Build.VERSION_CODES.N)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen(navController: NavController) {
+fun RegisterScreen(
+    navController: NavController,
+    onClickRegister: (name: String, lastname: String, birthdate: String, email: String, username: String, password: String, confirmPassword: String, token: String) -> Unit
+) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
@@ -56,16 +60,16 @@ fun RegisterScreen(navController: NavController) {
         )
     )
 
+    // Formulario de registro
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
     var lastname by remember { mutableStateOf("") }
     var birthdate by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
-    var pin by remember { mutableStateOf("") }
-
+    var token by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    var pinVisible by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
 
     val dateFormatter = remember { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) }
@@ -84,6 +88,7 @@ fun RegisterScreen(navController: NavController) {
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Logo
             Image(
                 painter = painterResource(id = R.drawable.image4_4153158),
                 contentDescription = "Logo",
@@ -93,6 +98,7 @@ fun RegisterScreen(navController: NavController) {
                     .padding(top = screenHeight * 0.02f)
             )
 
+            // Formulario
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -118,18 +124,15 @@ fun RegisterScreen(navController: NavController) {
                         OutlinedTextField(
                             value = name,
                             onValueChange = { name = it },
-                            label = { Text("Nombres", color = Color.White, fontFamily = happyMonkeyFont) },
+                            label = { Text("Nombres", color = Color.White) },
                             modifier = Modifier.weight(1f),
-                            shape = RoundedCornerShape(25.dp),
                             colors = outlinedTextFieldColors()
                         )
-
                         OutlinedTextField(
                             value = lastname,
                             onValueChange = { lastname = it },
-                            label = { Text("Apellidos", color = Color.White, fontFamily = happyMonkeyFont) },
+                            label = { Text("Apellidos", color = Color.White) },
                             modifier = Modifier.weight(1f),
-                            shape = RoundedCornerShape(25.dp),
                             colors = outlinedTextFieldColors()
                         )
                     }
@@ -137,85 +140,75 @@ fun RegisterScreen(navController: NavController) {
                     OutlinedTextField(
                         value = birthdate,
                         onValueChange = { },
-                        label = { Text("Fecha de nacimiento", color = Color.White, fontFamily = happyMonkeyFont) },
+                        label = { Text("Fecha de nacimiento", color = Color.White) },
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(25.dp),
-                        colors = outlinedTextFieldColors(),
                         readOnly = true,
                         trailingIcon = {
                             IconButton(onClick = { showDatePicker = true }) {
-                                Icon(Icons.Filled.CalendarToday, contentDescription = "Select date", tint = Color.White)
+                                Icon(Icons.Filled.CalendarToday, contentDescription = "Seleccionar fecha", tint = Color.White)
                             }
-                        }
+                        },
+                        colors = outlinedTextFieldColors()
                     )
 
                     OutlinedTextField(
                         value = email,
                         onValueChange = { email = it },
-                        label = { Text("Correo electrónico", color = Color.White, fontFamily = happyMonkeyFont) },
+                        label = { Text("Correo electrónico", color = Color.White) },
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(25.dp),
                         colors = outlinedTextFieldColors()
                     )
 
                     OutlinedTextField(
                         value = username,
                         onValueChange = { username = it },
-                        label = { Text("Usuario", color = Color.White, fontFamily = happyMonkeyFont) },
+                        label = { Text("Usuario", color = Color.White) },
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(25.dp),
                         colors = outlinedTextFieldColors()
                     )
 
                     OutlinedTextField(
                         value = password,
                         onValueChange = { password = it },
-                        label = { Text("Contraseña", color = Color.White, fontFamily = happyMonkeyFont) },
+                        label = { Text("Contraseña", color = Color.White) },
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(25.dp),
-                        colors = outlinedTextFieldColors(),
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
                                 Icon(
                                     if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                                    contentDescription = if (passwordVisible) "Hide password" else "Show password",
+                                    contentDescription = null,
                                     tint = Color.White
                                 )
                             }
-                        }
+                        },
+                        colors = outlinedTextFieldColors()
                     )
 
                     OutlinedTextField(
-                        value = password,
-                        onValueChange = { password = it },
-                        label = { Text("Confirmar Contraseña", color = Color.White, fontFamily = happyMonkeyFont) },
+                        value = confirmPassword,
+                        onValueChange = { confirmPassword = it },
+                        label = { Text("Confirmar contraseña", color = Color.White) },
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(25.dp),
-                        colors = outlinedTextFieldColors(),
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        trailingIcon = {
-                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                Icon(
-                                    if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                                    contentDescription = if (passwordVisible) "Hide confirmatepassword" else "Show confirmatepassword",
-                                    tint = Color.White
-                                )
-                            }
-                        }
+                        colors = outlinedTextFieldColors()
                     )
 
+                    // Botón de registro
                     Button(
-                        onClick = { navController.navigate(NavScreen.TermsScreen.name) },
+                        onClick = {
+                            if (password == confirmPassword) {
+                                onClickRegister(name, lastname, birthdate, email, username, password, confirmPassword, token)
+                                navController.navigate(NavScreen.AddChildScreen.name)
+                            }
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(screenHeight * 0.07f)
-                            .shadow(8.dp, shape = RoundedCornerShape(25.dp)),
+                            .height(screenHeight * 0.07f),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEF476F))
                     ) {
                         Text(
                             text = "Registrarme",
-                            fontFamily = happyMonkeyFont,
                             fontSize = (screenWidth.value * 0.05f).sp
                         )
                     }
@@ -225,16 +218,12 @@ fun RegisterScreen(navController: NavController) {
                     ) {
                         Text(
                             text = "Ya tienes cuenta?",
-                            fontFamily = happyMonkeyFont,
-                            color = Color.White,
-                            fontSize = (screenWidth.value * 0.04f).sp
+                            color = Color.White
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = "Inicia Sesión",
-                            fontFamily = happyMonkeyFont,
                             color = Color(0xFFFFD166),
-                            fontSize = (screenWidth.value * 0.04f).sp,
                             modifier = Modifier.clickable { navController.navigate(NavScreen.LoginScreen.name) }
                         )
                     }
@@ -243,14 +232,13 @@ fun RegisterScreen(navController: NavController) {
 
             Text(
                 text = "©Wooperland 2024",
-                fontFamily = happyMonkeyFont,
                 color = Color.White,
-                fontSize = (screenWidth.value * 0.035f).sp,
                 modifier = Modifier.padding(bottom = screenHeight * 0.02f)
             )
         }
     }
 
+    // DatePicker
     if (showDatePicker) {
         val datePickerState = rememberDatePickerState()
         DatePickerDialog(
@@ -267,28 +255,11 @@ fun RegisterScreen(navController: NavController) {
             },
             dismissButton = {
                 TextButton(onClick = { showDatePicker = false }) {
-                    Text("Cancel")
+                    Text("Cancelar")
                 }
             }
         ) {
             DatePicker(state = datePickerState)
         }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun outlinedTextFieldColors() = TextFieldDefaults.outlinedTextFieldColors(
-    focusedBorderColor = Color.White,
-    unfocusedBorderColor = Color.White,
-    cursorColor = Color.White,
-)
-
-@Preview(showBackground = true)
-@Composable
-fun RegisterScreenPreview() {
-    Wooperland_enserioTheme {
-        val navController = rememberNavController() // NavController para la preview
-        RegisterScreen(navController = navController)
     }
 }
