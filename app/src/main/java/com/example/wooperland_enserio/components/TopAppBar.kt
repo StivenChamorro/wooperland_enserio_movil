@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Games
+import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.outlined.ManageAccounts
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.Divider
@@ -42,6 +43,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.wooperland_enserio.R
@@ -50,10 +52,11 @@ import com.example.wooperland_enserio.navigation.NavScreen
 import com.example.wooperland_enserio.screens.HomeScreen
 import com.example.wooperland_enserio.ui.theme.Rosa_wooper
 import com.example.wooperland_enserio.ui.theme.Wooperland_enserioTheme
+import com.example.wooperland_enserio.viewmodel.LogoutViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppBar(navController: NavHostController) {
+fun TopAppBar(navController: NavHostController, logoutViewModel: LogoutViewModel) {
 
 
     val context = LocalContext.current.applicationContext
@@ -158,7 +161,41 @@ fun TopAppBar(navController: NavHostController) {
                             )
                         }
                     },
-                    onClick = { navController.navigate(NavScreen.ChangePlayerPasswordScreen.name) })
+                    onClick = { navController.navigate(NavScreen.ChangePlayerPasswordScreen.name) }
+                )
+                DropdownMenuItem(
+                    text = {
+                        Row (
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Icon(
+                                imageVector = Icons.Outlined.Logout,
+                                contentDescription = "logout",
+                                modifier = Modifier
+                                    .size(24.dp),
+                                tint = Color.White
+                            )
+                            Text(
+                                text = "Cerrar Sesión",
+                                modifier = Modifier
+                                    .padding(start = 10.dp),
+                                color = Color.White,
+                                fontSize = 15.sp,
+                                fontFamily = FontFamily(
+                                    Font(R.font.happy_monkey)
+                                )
+                            )
+                        }
+                    },
+                    onClick = {
+                        logoutViewModel.logout(context) {
+                            // Redirigir al login tras el logout
+                            navController.navigate(NavScreen.LoginScreen.name) {
+                                popUpTo(0) // Limpia el stack de navegación
+                            }
+                        }
+                    }
+                )
             }
         }
     )

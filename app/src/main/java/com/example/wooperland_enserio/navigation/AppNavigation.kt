@@ -1,5 +1,7 @@
 package com.example.wooperland_enserio.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
@@ -21,9 +23,12 @@ import com.example.wooperland_enserio.screens.ProfileScreen
 import com.example.wooperland_enserio.screens.RegisterScreen
 import com.example.wooperland_enserio.screens.ShopScreen
 import com.example.wooperland_enserio.screens.TermsScreen
+import com.example.wooperland_enserio.viewmodel.ChildProfileViewModel
 import com.example.wooperland_enserio.viewmodel.LoginViewModel
 import com.example.wooperland_enserio.viewmodel.RegisterViewModel
+import com.example.wooperland_enserio.viewmodel.TopicsViewModel
 
+@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun AppNavigation(
     viewModel: LoginViewModel,
@@ -38,24 +43,40 @@ fun AppNavigation(
         composable(route = NavigationItem.Login.route) {
             if (viewModel.isSuccessLoading.value) {
                 LaunchedEffect(key1 = Unit) {
-                    navController.navigate(route = NavigationItem.Home.route) {
-                        popUpTo(route = NavigationItem.Login.route) {
-                            inclusive = true
+                    if (viewModel.isFirstLogin.value) {
+                        // Redirigir a TermsScreen si es el primer login.
+                        navController.navigate(route = NavigationItem.Terms.route) {
+                            popUpTo(route = NavigationItem.Login.route) {
+                                inclusive = true
+                            }
+                        }
+                    } else {
+                        // Redirigir a la vista habitual.
+                        navController.navigate(route = NavigationItem.Home.route) {
+                            popUpTo(route = NavigationItem.Login.route) {
+                                inclusive = true
+                            }
                         }
                     }
                 }
             } else {
                 LoginScreen(
-                    onclickLogin = viewModel::login,
+                    onclickLogin = { email, password -> viewModel.login(email, password) },
                     navController = navController
                 )
             }
         }
 
+
+
+        composable(NavigationItem.Terms.route) {
+            TermsScreen(navController)
+        }
+
         composable(route = NavigationItem.Register.route) {
             if (viewModel2.isSuccessRegister.value) {
                 LaunchedEffect(key1 = Unit) {
-                    navController.navigate("${NavigationItem.AddChild.route}/${viewModel2.token.value}") {
+                    navController.navigate(NavigationItem.Login.route) {
                         popUpTo(route = NavigationItem.Register.route) {
                             inclusive = true
                         }
@@ -63,10 +84,10 @@ fun AppNavigation(
                 }
             } else {
                 RegisterScreen(
+                    navController = navController,
                     onClickRegister = { name, lastName, birthDate, email, username, password, confirmPassword, token ->
                         viewModel2.register(name, lastName, birthDate, email, username, password, confirmPassword, token)
-                    },
-                    navController = navController
+                    }
                 )
             }
         }
@@ -79,19 +100,17 @@ fun AppNavigation(
 //        composable(NavigationItem.Register.route) {
 //            RegisterScreen(navController)
 //        }
-        composable(NavigationItem.Terms.route) {
-            TermsScreen(navController)
-        }
+
         composable(NavigationItem.AddChild.route) {
             AddChildScreen(navController)
         }
 
         //rutas de navegacion principales
         composable(NavScreen.HomeScreen.name) {
-            HomeScreen(navController)
+            HomeScreen(navController, viewModel = TopicsViewModel())
         }
         composable(NavScreen.ProfileScreen.name) {
-            ProfileScreen()
+            ProfileScreen(viewModel = ChildProfileViewModel())
         }
         composable(NavScreen.AvatarScreen.name) {
             AvatarScreen()

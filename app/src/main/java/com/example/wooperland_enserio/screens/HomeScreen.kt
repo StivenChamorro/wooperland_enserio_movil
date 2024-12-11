@@ -1,6 +1,8 @@
 package com.example.wooperland_enserio.screens
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -12,6 +14,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -21,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -32,14 +38,34 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberImagePainter
 
 import com.example.wooperland_enserio.R
+import com.example.wooperland_enserio.model.TopicResponse
 import com.example.wooperland_enserio.navigation.NavScreen
 import com.example.wooperland_enserio.ui.theme.Wooperland_enserioTheme
+import com.example.wooperland_enserio.viewmodel.TopicsViewModel
+import com.example.wooperland_enserio.viewmodel.UsersViewModel
 
 @SuppressLint("InvalidColorHexValue")
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController, viewModel: TopicsViewModel) {
+
+    val context = LocalContext.current
+    val sharedPreferences = context.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
+    val token = sharedPreferences.getString("jwt_token", null)
+
+
+    LaunchedEffect(Unit) {
+        if (token != null) {
+            viewModel.fetchTopics()
+        }else{
+            Log.e("HomeScreen", "Token is null")
+        }
+    }
+
+    val topics by viewModel.topics.observeAsState(emptyList())
+
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp
@@ -148,49 +174,6 @@ fun HomeScreen(navController: NavController) {
 
                         Spacer(modifier = Modifier.height(16.dp)) // Espacio entre el texto y el botón
 
-                        Button(
-                            onClick = { /*TODO*/ },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(48.dp)
-                                .shadow(8.dp, shape = RoundedCornerShape(25.dp))
-                                .border(
-                                    width = 1.dp,
-                                    color = Color.White,
-                                    shape = RoundedCornerShape(25.dp)
-                                ),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFFFFFFF).copy(alpha = 0.5f)
-                            )
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                Text(
-                                    text = "JUGAR",
-                                    color = Color(0xFFEF476F),
-                                    fontFamily = customFont,
-                                    fontSize = (screenWidth.value * 0.03f).sp,
-                                    style = TextStyle(
-                                        shadow = Shadow(
-                                            color = Color.Black,
-                                            offset = Offset(4f, 4f),
-                                        )
-                                    )
-                                )
-
-                                Spacer(modifier = Modifier.width(5.dp))
-
-                                Image(
-                                    painter = painterResource(id = R.drawable.btnplay),
-                                    contentDescription = null,
-                                    contentScale = ContentScale.Fit,
-                                    modifier = Modifier.size(24.dp)
-                                )
-                            }
-                        }
                     }
                 }
             }
@@ -215,9 +198,11 @@ fun HomeScreen(navController: NavController) {
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(15.dp)
             ) {
-                items(3) {
+                items(topics) { topic ->
+                    // Pasar el tema dinámicamente a cada tarjeta
                     SubjectCard(
                         navController,
+                        topic = topic,  // Pasamos el tema actual al card
                         modifier = Modifier
                             .width(screenWidth * 0.8f)
                             .height(screenHeight * 0.2f)
@@ -231,19 +216,22 @@ fun HomeScreen(navController: NavController) {
 @Composable
 fun SubjectCard(
     navController: NavController,
-    modifier: Modifier = Modifier) {
+    topic: TopicResponse,  // Recibimos el tema como parámetro
+    modifier: Modifier = Modifier
+) {
     val customFont2 = FontFamily(Font(R.font.happy_monkey))
 
     Card(
-        onClick = {navController.navigate(NavScreen.LevelPreviewScreen.name)},
+        onClick = { navController.navigate(NavScreen.LevelPreviewScreen.name) },
         modifier = modifier,
         shape = RoundedCornerShape(16.dp)
     ) {
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
+            // Usamos la imagen o el fondo del tema, si está disponible
             Image(
-                painter = painterResource(id = R.drawable.math),
+                painter = rememberImagePainter(data = topic.image),   // Puedes usar un recurso dinámico si tienes imágenes asociadas
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
@@ -256,14 +244,14 @@ fun SubjectCard(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Matematicas",
+                    text = topic.name,  // Usamos el nombre del tema dinámicamente
                     color = Color.White,
                     fontFamily = customFont2,
                     fontSize = 24.sp,
                 )
 
                 Text(
-                    text = "Descripción de la materia que abarca conceptos básicos y avanzados.",
+                    text = topic.description,  // Descripción del tema
                     color = Color.White,
                     fontFamily = customFont2,
                     fontSize = 14.sp,
@@ -285,11 +273,11 @@ fun SubjectCard(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    Wooperland_enserioTheme {
-        val navController = rememberNavController()
-        HomeScreen(navController = navController)
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun HomeScreenPreview() {
+//    Wooperland_enserioTheme {
+//        val navController = rememberNavController()
+//        HomeScreen(navController = navController)
+//    }
+//}

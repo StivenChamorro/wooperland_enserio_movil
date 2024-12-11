@@ -1,39 +1,97 @@
 package com.example.wooperland_enserio.screens
 
-import androidx.compose.animation.*
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import android.content.Context
+import android.icu.lang.UCharacter.getAge
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import android.net.Uri
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.wooperland_enserio.R
-
+import com.example.wooperland_enserio.viewmodel.ChildProfileViewModel
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    viewModel: ChildProfileViewModel,
+) {
+
+//    val childId by ProfileUserViewModel.childId.collectAsState()
+//    val childResponse by ViewModel.childResponse.collectAsState()
+//    val errorMessage by ViewModel.errorMessage.collectAsState()
+//
+//    LaunchedEffect(childId) {
+//        childId?.let {
+//            viewModel.getChildDetails(it, "tu_jwt_token_aqui")
+//        }
+//    }
+
+    val context = LocalContext.current
+    val sharedPreferences = context.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
+    val token = sharedPreferences.getString("jwt_token", null)
+
+    LaunchedEffect(Unit) {
+        if (token != null) {
+            viewModel.fetchChildProfile()
+        }else{
+            Log.e("HomeScreen", "Token is null")
+        }
+    }
+
+    val child by viewModel.children.observeAsState()
+
     val gradient = Brush.verticalGradient(
         colors = listOf(
             Color(0xFFFFD166), // Amarillo claro
@@ -46,14 +104,21 @@ fun ProfileScreen() {
     var isEditing by remember { mutableStateOf(false) }
     var showNicknameModal by remember { mutableStateOf(false) }
     var showAboutModal by remember { mutableStateOf(false) }
-    var nickname by remember { mutableStateOf("Nick") }
-    var about by remember { mutableStateOf("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id est, unde exercitationem, rerum perspiciatis deleniti") }
     var profileImageUri by remember { mutableStateOf<Uri?>(null) }
+
+    var nickname by remember { mutableStateOf("") }
+    var about by remember { mutableStateOf("") }
 
     val pink = Color(0xFFFF4081)
     val lightGray = Color(0xFFF5F5F5)
 
-    val context = LocalContext.current
+    LaunchedEffect(child) {
+        child?.child?.let {
+            nickname = it.nickname ?: ""
+            about = it.about ?: ""
+        }
+    }
+
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -92,11 +157,7 @@ fun ProfileScreen() {
                     // Imagen de perfil con icono de edición
                     Box(contentAlignment = Alignment.Center) {
                         Image(
-                            painter = if (profileImageUri != null) {
-                                rememberImagePainter(profileImageUri)
-                            } else {
-                                painterResource(id = R.drawable.profile)
-                            },
+                            painter = rememberImagePainter(data = child?.child?.avatar),
                             contentDescription = "Profile Picture",
                             modifier = Modifier
                                 .size(120.dp)
@@ -138,11 +199,12 @@ fun ProfileScreen() {
                         }
                     }
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text("Nicolas Smith Pines", fontFamily = happyMonkeyFont)
+                    Text("${child?.child?.name} ${child?.child?.lastname}", fontFamily = happyMonkeyFont)
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text("8 años", fontFamily = happyMonkeyFont)
+
+                    Text("Fecha de nacimiento: ${child?.child?.birthdate}", fontFamily = happyMonkeyFont)
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text("Eres hijo de John Smith", fontFamily = happyMonkeyFont)
+                    Text("Relación: ${child?.child?.relation}", fontFamily = happyMonkeyFont)
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Button(
@@ -220,7 +282,8 @@ fun ProfileScreen() {
                 onSave = { newNickname ->
                     nickname = newNickname
                     showNicknameModal = false
-                }
+                },
+                viewModel = viewModel
             )
         }
 
@@ -232,7 +295,8 @@ fun ProfileScreen() {
                 onSave = { newAbout ->
                     about = newAbout
                     showAboutModal = false
-                }
+                },
+                viewModel = viewModel
             )
         }
     }
@@ -265,7 +329,8 @@ fun RecentTopicItem(topic: String) {
 fun EditNicknameDialog(
     currentNickname: String,
     onDismiss: () -> Unit,
-    onSave: (String) -> Unit
+    onSave: (String) -> Unit,
+    viewModel: ChildProfileViewModel
 ) {
     var nickname by remember { mutableStateOf(currentNickname) }
 
@@ -305,15 +370,14 @@ fun EditNicknameDialog(
                     fontFamily = happyMonkeyFont
                 )
 
-                Button(
-                    onClick = { onSave(nickname) },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF4081)),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp)
-                ) {
-                    Text("Guardar", fontFamily = happyMonkeyFont)
+                Button(onClick = {
+                    viewModel.updateChildProfile(nickname, viewModel.children.value?.child?.about ?: "")
+                    onSave(nickname)
+                    onDismiss()
+                }) {
+                    Text("Guardar")
                 }
+
             }
         }
     }
@@ -323,7 +387,8 @@ fun EditNicknameDialog(
 fun EditAboutDialog(
     currentAbout: String,
     onDismiss: () -> Unit,
-    onSave: (String) -> Unit
+    onSave: (String) -> Unit,
+    viewModel: ChildProfileViewModel
 ) {
     var about by remember { mutableStateOf(currentAbout) }
 
@@ -364,15 +429,14 @@ fun EditAboutDialog(
                     fontFamily = happyMonkeyFont
                 )
 
-                Button(
-                    onClick = { onSave(about) },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF4081)),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp)
-                ) {
-                    Text("Guardar", fontFamily = happyMonkeyFont)
+                Button(onClick = {
+                    viewModel.updateChildProfile(viewModel.children.value?.child?.nickname ?: "", about)
+                    onSave(about)
+                    onDismiss()
+                }) {
+                    Text("Guardar")
                 }
+
             }
         }
     }

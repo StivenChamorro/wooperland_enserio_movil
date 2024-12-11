@@ -2,6 +2,7 @@ package com.example.wooperland_enserio.screens
 
 import android.content.res.Configuration
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,16 +29,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.wooperland_enserio.R
 import com.example.wooperland_enserio.navigation.NavScreen
+import com.example.wooperland_enserio.viewmodel.AddChildViewModel
+import java.io.File
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddChildScreen(navController: NavController) {
+fun AddChildScreen(
+    navController: NavController,
+    viewModel: AddChildViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
+    // Estados locales
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var name by remember { mutableStateOf("") }
     var lastname by remember { mutableStateOf("") }
@@ -46,36 +56,37 @@ fun AddChildScreen(navController: NavController) {
     var gender by remember { mutableStateOf("") }
     var nickname by remember { mutableStateOf("") }
     var showDatePicker by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val response by viewModel.responseState.collectAsState()
+    val errorMessage by viewModel.errorState.collectAsState()
 
     val happyMonkeyFont = FontFamily(Font(R.font.happy_monkey))
-
     val gradient = Brush.verticalGradient(
-        colors = listOf(
-            Color(0xFFEF476F).copy(alpha = 0.9f),
-            Color(0xFF892940).copy(alpha = 0.9f)
-        )
+        colors = listOf(Color(0xFFEF476F).copy(alpha = 0.9f), Color(0xFF892940).copy(alpha = 0.9f))
     )
 
-    val imagePicker = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
+    // Image Picker
+    val imagePicker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         imageUri = uri
     }
 
-    val configuration = LocalConfiguration.current
-    val screenHeight = configuration.screenHeightDp.dp
-    val screenWidth = configuration.screenWidthDp.dp
-    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    LaunchedEffect(response) {
+        response?.let {
+            Toast.makeText(context, "Perfil creado exitosamente.", Toast.LENGTH_SHORT).show()
+            navController.navigate(NavScreen.HomeScreen.name)
+        }
+    }
+
+    LaunchedEffect(errorMessage) {
+        errorMessage?.let {
+            Toast.makeText(context, "Error: $it", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.addchild),
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier
-                .fillMaxSize()
-        )
-
+        BackgroundImage()
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -86,10 +97,8 @@ fun AddChildScreen(navController: NavController) {
                 modifier = Modifier
                     .background(gradient, shape = RoundedCornerShape(25.dp))
                     .padding(16.dp)
-                    .let {
-                        if (isLandscape) it.fillMaxHeight().width(screenWidth * 0.8f)
-                        else it.fillMaxWidth().height(screenHeight * 0.9f)
-                    }
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.9f)
             ) {
                 Column(
                     modifier = Modifier
@@ -98,6 +107,7 @@ fun AddChildScreen(navController: NavController) {
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    // Título
                     Text(
                         text = "Crea un nuevo perfil",
                         color = Color.White,
@@ -106,77 +116,18 @@ fun AddChildScreen(navController: NavController) {
                         modifier = Modifier.padding(top = 24.dp)
                     )
 
-                    Box(
-                        modifier = Modifier
-                            .size(100.dp)
-                            .clip(RoundedCornerShape(50.dp))
-                            .background(Color.Gray)
-                            .clickable { imagePicker.launch("image/*") },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        if (imageUri != null) {
-                            Image(
-                                painter = rememberAsyncImagePainter(imageUri),
-                                contentDescription = "Imagen de perfil",
-                                modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.Crop
-                            )
-                        } else {
-                            Icon(
-                                imageVector = Icons.Default.AddAPhoto,
-                                contentDescription = "Añadir foto",
-                                modifier = Modifier.size(80.dp),
-                                tint = Color.White
-                            )
-                        }
-                    }
+                    // Selector de imagen
+                    ProfileImagePicker(imageUri) { imagePicker.launch("image/*") }
 
-                    OutlinedTextField(
-                        value = name,
-                        onValueChange = { name = it },
-                        label = { Text("Nombres", fontSize = 20.sp, color = Color.White, fontFamily = happyMonkeyFont) },
-                        modifier = Modifier
-                            .fillMaxWidth(0.9f)
-                            .height(56.dp),
-                        shape = RoundedCornerShape(25.dp),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = Color.White,
-                            unfocusedBorderColor = Color.White,
-                            cursorColor = Color.White
-                        ),
-                        leadingIcon = { Icon(Icons.Default.Person, contentDescription = null, tint = Color.White) }
-                    )
-
-                    OutlinedTextField(
-                        value = lastname,
-                        onValueChange = { lastname = it },
-                        label = { Text("Apellidos", fontSize = 20.sp, color = Color.White, fontFamily = happyMonkeyFont) },
-                        modifier = Modifier
-                            .fillMaxWidth(0.9f)
-                            .height(56.dp),
-                        shape = RoundedCornerShape(25.dp),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = Color.White,
-                            unfocusedBorderColor = Color.White,
-                            cursorColor = Color.White
-                        ),
-                        leadingIcon = { Icon(Icons.Default.Person, contentDescription = null, tint = Color.White) }
-                    )
-
-                    OutlinedTextField(
+                    // Campos de texto
+                    ProfileTextField(value = name, onValueChange = { name = it }, label = "Nombres", icon = Icons.Default.Person, happyMonkeyFont)
+                    ProfileTextField(value = lastname, onValueChange = { lastname = it }, label = "Apellidos", icon = Icons.Default.Person, happyMonkeyFont)
+                    ProfileTextField(
                         value = birthDate,
-                        onValueChange = { },
-                        label = { Text("Fecha de nacimiento", fontSize = 18.sp, color = Color.White, fontFamily = happyMonkeyFont) },
-                        modifier = Modifier
-                            .fillMaxWidth(0.9f)
-                            .height(56.dp),
-                        shape = RoundedCornerShape(25.dp),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = Color.White,
-                            unfocusedBorderColor = Color.White,
-                            cursorColor = Color.White
-                        ),
-                        leadingIcon = { Icon(Icons.Default.DateRange, contentDescription = null, tint = Color.White) },
+                        onValueChange = {},
+                        label = "Fecha de nacimiento",
+                        icon = Icons.Default.DateRange,
+                        font = happyMonkeyFont,
                         readOnly = true,
                         trailingIcon = {
                             IconButton(onClick = { showDatePicker = true }) {
@@ -184,74 +135,56 @@ fun AddChildScreen(navController: NavController) {
                             }
                         }
                     )
+                    ProfileTextField(value = relation, onValueChange = { relation = it }, label = "Relación", icon = Icons.Default.Favorite, happyMonkeyFont)
+                    ProfileTextField(value = gender, onValueChange = { gender = it }, label = "Género", icon = Icons.Default.Face, happyMonkeyFont)
+                    ProfileTextField(value = nickname, onValueChange = { nickname = it }, label = "Nickname", icon = Icons.Default.Star, happyMonkeyFont)
 
-                    OutlinedTextField(
-                        value = relation,
-                        onValueChange = { relation = it },
-                        label = { Text("Relación con el usuario", fontSize = 20.sp, color = Color.White, fontFamily = happyMonkeyFont) },
-                        modifier = Modifier
-                            .fillMaxWidth(0.9f)
-                            .height(56.dp),
-                        shape = RoundedCornerShape(25.dp),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = Color.White,
-                            unfocusedBorderColor = Color.White,
-                            cursorColor = Color.White
-                        ),
-                        leadingIcon = { Icon(Icons.Default.Favorite, contentDescription = null, tint = Color.White) }
-                    )
-
-                    OutlinedTextField(
-                        value = gender,
-                        onValueChange = { gender = it },
-                        label = { Text("Género", fontSize = 20.sp, color = Color.White, fontFamily = happyMonkeyFont) },
-                        modifier = Modifier
-                            .fillMaxWidth(0.9f)
-                            .height(56.dp),
-                        shape = RoundedCornerShape(25.dp),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = Color.White,
-                            unfocusedBorderColor = Color.White,
-                            cursorColor = Color.White
-                        ),
-                        leadingIcon = { Icon(Icons.Default.Face, contentDescription = null, tint = Color.White) }
-                    )
-
-                    OutlinedTextField(
-                        value = nickname,
-                        onValueChange = { nickname = it },
-                        label = { Text("Nickname", fontSize = 20.sp, color = Color.White, fontFamily = happyMonkeyFont) },
-                        modifier = Modifier
-                            .fillMaxWidth(0.9f)
-                            .height(56.dp),
-                        shape = RoundedCornerShape(25.dp),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = Color.White,
-                            unfocusedBorderColor = Color.White,
-                            cursorColor = Color.White
-                        ),
-                        leadingIcon = { Icon(Icons.Default.Star, contentDescription = null, tint = Color.White) }
-                    )
-
+                    // Botón Continuar
                     Button(
-                        onClick = { navController.navigate(NavScreen.HomeScreen.name) },
+                        onClick = {
+                            if (name.isBlank() || lastname.isBlank() || birthDate.isBlank() || nickname.isBlank()) {
+                                Toast.makeText(context, "Completa todos los campos.", Toast.LENGTH_SHORT).show()
+                                return@Button
+                            }
+
+                            isLoading = true
+                            val avatarPath = imageUri?.let { uri ->
+                                val file = File(context.cacheDir, "avatar.jpg")
+                                context.contentResolver.openInputStream(uri)?.use { input ->
+                                    FileOutputStream(file).use { output -> input.copyTo(output) }
+                                }
+                                file.path
+                            }
+
+                            val dto = viewModel.createAddChildDto(
+                                name = name,
+                                lastname = lastname,
+                                birthdate = birthDate,
+                                nickname = nickname,
+                                relation = relation,
+                                gender = gender,
+                                about = null,
+                                avatarPath = avatarPath
+                            )
+                            viewModel.addChild(dto)
+                        },
+                        enabled = !isLoading,
                         modifier = Modifier
-                            .fillMaxWidth(.9f)
+                            .fillMaxWidth(0.9f)
                             .height(56.dp)
-                            .shadow(8.dp, shape = RoundedCornerShape(25.dp)),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFEF476F)
-                        )
+                            .shadow(8.dp, RoundedCornerShape(25.dp)),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEF476F))
                     ) {
-                        Text(text = "Continuar", fontFamily = happyMonkeyFont, fontSize = 30.sp)
+                        if (isLoading) CircularProgressIndicator(color = Color.White) else Text("Continuar", fontFamily = happyMonkeyFont, fontSize = 20.sp)
                     }
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }
     }
 
+    // DatePicker
     if (showDatePicker) {
         val datePickerState = rememberDatePickerState()
         DatePickerDialog(
@@ -266,13 +199,80 @@ fun AddChildScreen(navController: NavController) {
                     Text("OK")
                 }
             },
-            dismissButton = {
-                TextButton(onClick = { showDatePicker = false }) {
-                    Text("Cancelar")
-                }
-            }
+            dismissButton = { TextButton(onClick = { showDatePicker = false }) { Text("Cancelar") } }
         ) {
             DatePicker(state = datePickerState)
         }
     }
+}
+
+
+
+
+@Composable
+fun BackgroundImage() {
+    Image(
+        painter = painterResource(id = R.drawable.addchild),
+        contentDescription = null,
+        contentScale = ContentScale.FillBounds,
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
+@Composable
+fun ProfileImagePicker(imageUri: Uri?, onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .size(100.dp)
+            .clip(RoundedCornerShape(50.dp))
+            .background(Color.Gray)
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center
+    ) {
+        if (imageUri != null) {
+            Image(
+                painter = rememberAsyncImagePainter(imageUri),
+                contentDescription = "Imagen de perfil",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+        } else {
+            Icon(
+                imageVector = Icons.Default.AddAPhoto,
+                contentDescription = "Añadir foto",
+                modifier = Modifier.size(80.dp),
+                tint = Color.White
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ProfileTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    icon: ImageVector,
+    font: FontFamily,
+    readOnly: Boolean = false,
+    trailingIcon: @Composable (() -> Unit)? = null
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label, fontSize = 18.sp, color = Color.White, fontFamily = font) },
+        modifier = Modifier
+            .fillMaxWidth(0.9f)
+            .height(56.dp),
+        shape = RoundedCornerShape(25.dp),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = Color.White,
+            unfocusedBorderColor = Color.White,
+            cursorColor = Color.White
+        ),
+        leadingIcon = { Icon(icon, contentDescription = null, tint = Color.White) },
+        readOnly = readOnly,
+        trailingIcon = trailingIcon
+    )
 }

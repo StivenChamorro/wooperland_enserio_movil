@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -124,54 +125,85 @@ fun RegisterScreen(
                         OutlinedTextField(
                             value = name,
                             onValueChange = { name = it },
-                            label = { Text("Nombres", color = Color.White) },
+                            label = { Text("Nombres", color = Color.White, fontFamily = happyMonkeyFont) },
                             modifier = Modifier.weight(1f),
-                            colors = outlinedTextFieldColors()
+                            shape = RoundedCornerShape(25.dp),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = Color.White,
+                                unfocusedBorderColor = Color.White,
+                                cursorColor = Color.White
+                            ),
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                         )
                         OutlinedTextField(
                             value = lastname,
                             onValueChange = { lastname = it },
-                            label = { Text("Apellidos", color = Color.White) },
+                            label = { Text("Apellidos", color = Color.White, fontFamily = happyMonkeyFont) },
                             modifier = Modifier.weight(1f),
-                            colors = outlinedTextFieldColors()
+                            shape = RoundedCornerShape(25.dp),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = Color.White,
+                                unfocusedBorderColor = Color.White,
+                                cursorColor = Color.White
+                            ),
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                         )
                     }
 
                     OutlinedTextField(
                         value = birthdate,
                         onValueChange = { },
-                        label = { Text("Fecha de nacimiento", color = Color.White) },
+                        label = { Text("Fecha de nacimiento", color = Color.White, fontFamily = happyMonkeyFont) },
                         modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(25.dp),
                         readOnly = true,
                         trailingIcon = {
                             IconButton(onClick = { showDatePicker = true }) {
                                 Icon(Icons.Filled.CalendarToday, contentDescription = "Seleccionar fecha", tint = Color.White)
                             }
                         },
-                        colors = outlinedTextFieldColors()
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = Color.White,
+                            unfocusedBorderColor = Color.White,
+                            cursorColor = Color.White
+                        ),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                     )
 
                     OutlinedTextField(
                         value = email,
                         onValueChange = { email = it },
-                        label = { Text("Correo electrónico", color = Color.White) },
+                        label = { Text("Correo electrónico", color = Color.White, fontFamily = happyMonkeyFont) },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = outlinedTextFieldColors()
+                        shape = RoundedCornerShape(25.dp),
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = Color.White,
+                            unfocusedBorderColor = Color.White,
+                            cursorColor = Color.White
+                        ),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                     )
 
                     OutlinedTextField(
                         value = username,
                         onValueChange = { username = it },
-                        label = { Text("Usuario", color = Color.White) },
+                        label = { Text("Usuario", color = Color.White, fontFamily = happyMonkeyFont) },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = outlinedTextFieldColors()
+                        shape = RoundedCornerShape(25.dp),
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = Color.White,
+                            unfocusedBorderColor = Color.White,
+                            cursorColor = Color.White
+                        ),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                     )
 
                     OutlinedTextField(
                         value = password,
                         onValueChange = { password = it },
-                        label = { Text("Contraseña", color = Color.White) },
+                        label = { Text("Contraseña", color = Color.White, fontFamily = happyMonkeyFont) },
                         modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(25.dp),
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
@@ -182,16 +214,26 @@ fun RegisterScreen(
                                 )
                             }
                         },
-                        colors = outlinedTextFieldColors()
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = Color.White,
+                            unfocusedBorderColor = Color.White,
+                            cursorColor = Color.White
+                        ),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                     )
 
                     OutlinedTextField(
                         value = confirmPassword,
                         onValueChange = { confirmPassword = it },
-                        label = { Text("Confirmar contraseña", color = Color.White) },
+                        label = { Text("Confirmar contraseña", color = Color.White, fontFamily = happyMonkeyFont) },
                         modifier = Modifier.fillMaxWidth(),
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        colors = outlinedTextFieldColors()
+                        shape = RoundedCornerShape(25.dp),
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = Color.White,
+                            unfocusedBorderColor = Color.White,
+                            cursorColor = Color.White
+                        ),
                     )
 
                     // Botón de registro
@@ -199,7 +241,7 @@ fun RegisterScreen(
                         onClick = {
                             if (password == confirmPassword) {
                                 onClickRegister(name, lastname, birthdate, email, username, password, confirmPassword, token)
-                                navController.navigate(NavScreen.AddChildScreen.name)
+//                                navController.navigate(NavScreen.AddChildScreen.name)
                             }
                         },
                         modifier = Modifier
@@ -209,7 +251,8 @@ fun RegisterScreen(
                     ) {
                         Text(
                             text = "Registrarme",
-                            fontSize = (screenWidth.value * 0.05f).sp
+                            fontSize = (screenWidth.value * 0.05f).sp,
+                            fontFamily = happyMonkeyFont
                         )
                     }
 
@@ -218,12 +261,14 @@ fun RegisterScreen(
                     ) {
                         Text(
                             text = "Ya tienes cuenta?",
-                            color = Color.White
+                            color = Color.White,
+                            fontFamily = happyMonkeyFont,
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = "Inicia Sesión",
                             color = Color(0xFFFFD166),
+                            fontFamily = happyMonkeyFont,
                             modifier = Modifier.clickable { navController.navigate(NavScreen.LoginScreen.name) }
                         )
                     }
@@ -233,6 +278,7 @@ fun RegisterScreen(
             Text(
                 text = "©Wooperland 2024",
                 color = Color.White,
+                fontFamily = happyMonkeyFont,
                 modifier = Modifier.padding(bottom = screenHeight * 0.02f)
             )
         }
