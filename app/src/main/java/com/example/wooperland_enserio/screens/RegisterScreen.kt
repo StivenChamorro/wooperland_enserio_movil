@@ -241,7 +241,7 @@ fun RegisterScreen(
                         onClick = {
                             if (password == confirmPassword) {
                                 onClickRegister(name, lastname, birthdate, email, username, password, confirmPassword, token)
-                                //navController.navigate(NavScreen.AddChildScreen.name)
+//                                navController.navigate(NavScreen.AddChildScreen.name)
                             }
                         },
                         modifier = Modifier

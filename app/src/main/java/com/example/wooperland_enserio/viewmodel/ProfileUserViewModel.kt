@@ -9,6 +9,8 @@ import com.example.wooperland_enserio.data.UserProfileRepository
 import com.example.wooperland_enserio.data.UserRepository
 import com.example.wooperland_enserio.model.UserProfileResponse
 import com.example.wooperland_enserio.model.UserResponse
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ProfileUserViewModel: ViewModel() {
@@ -16,6 +18,14 @@ class ProfileUserViewModel: ViewModel() {
 
     private val _userProfile = MutableLiveData<UserProfileResponse>()
     val userProfile: LiveData<UserProfileResponse> = _userProfile
+
+    private val _childId = MutableStateFlow<String?>(null)
+    val childId = _childId.asStateFlow()
+
+
+    fun setChildId(id: String) {
+        _childId.value = id
+    }
 
     fun fetchUserProfile() {
         viewModelScope.launch {

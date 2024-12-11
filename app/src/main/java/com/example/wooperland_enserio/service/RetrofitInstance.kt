@@ -16,4 +16,12 @@ object RetrofitInstance {
     val wooperService: ApiService by lazy {
         retrofit.create(ApiService::class.java)
     }
+
+    val childrenService: ChildrenApiService by lazy {
+        retrofit.create(ChildrenApiService::class.java)
+    }
+
+    val topicService: TopicService by lazy {
+        retrofit.create(TopicService::class.java)
+    }
 }

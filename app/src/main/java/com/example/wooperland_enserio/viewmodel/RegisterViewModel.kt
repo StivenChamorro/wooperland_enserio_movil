@@ -1,11 +1,11 @@
 package com.example.wooperland_enserio.viewmodel
 
+import RetrofitHelper
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.wooperland_enserio.model.dto.RegisterDto
-import com.example.wooperland_enserio.service.RetrofitHelper
+import com.example.wooperland_enserio.model.dtoAuht.RegisterDto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -75,8 +75,7 @@ class RegisterViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     val registerResponse = response.body()
                     if (registerResponse != null) {
-                        // Guardar el token y procesar el usuario
-                        token.value = registerResponse.token
+
                         isSuccessRegister.value = true
                         Log.d("RegisterSuccess", "Registro exitoso. Token recibido: ${token.value}")
                     } else {
